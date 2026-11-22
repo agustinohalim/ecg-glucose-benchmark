@@ -1,0 +1,38 @@
+{
+  "title": "ecg-glucose-benchmark: analysis code, pre-specified protocols and aggregate results for detecting hypo- and hyperglycemia from inpatient 12-lead ECGs",
+  "description": "<p>Analysis code, aggregate results and analysis-plan excerpt for a study of hypoglycemia and severe hyperglycemia detection from inpatient 12-lead ECGs in MIMIC-IV-Ext-ECG-Glucose v1.0.0, with waveforms from MIMIC-IV-ECG v1.0. Models: demographics, ECG machine measurements (logistic regression and gradient boosting), a 1-D CNN trained from scratch, and frozen ECG foundation models with an L2 logistic probe (ECGFounder and ECG-JEPA, pretrained without MIMIC-IV-ECG; ECG-FM, pretrained on part of MIMIC-IV-ECG). The plan excerpt holds the TEST protocol and the pretraining-contamination protocol, each recorded before the data it governs were examined. Version 1.0.0 is released before the contamination test was run.</p><p>No data from the credentialed dataset are included: the scripts run locally on the PhysioNet releases and print aggregate tables only, with counts between 1 and 10 masked. Code: MIT. Notes and plan excerpt: CC BY 4.0.</p>",
+  "upload_type": "software",
+  "license": "MIT",
+  "access_right": "open",
+  "language": "eng",
+  "version": "1.0.0",
+  "creators": [
+    {
+      "name": "Halim, Agustino",
+      "affiliation": "Information Systems and Technology, Universitas OSO, Pontianak, Indonesia",
+      "orcid": "0009-0008-4388-1174"
+    }
+  ],
+  "keywords": [
+    "electrocardiogram",
+    "hypoglycemia",
+    "hyperglycemia",
+    "ECG foundation models",
+    "pretraining contamination",
+    "MIMIC-IV"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.13026/nts2-vj76",
+      "relation": "isDerivedFrom",
+      "resource_type": "dataset",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.13026/4nqg-sb35",
+      "relation": "isDerivedFrom",
+      "resource_type": "dataset",
+      "scheme": "doi"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "ecg-glucose-benchmark: analysis code, pre-specified protocols and aggregate results for detecting hypo- and hyperglycemia from inpatient 12-lead ECGs"
+abstract: >-
+  Analysis code, aggregate results and analysis-plan excerpt for a study of hypoglycemia and severe hyperglycemia
+  detection from inpatient 12-lead ECGs in MIMIC-IV-Ext-ECG-Glucose v1.0.0: demographics, ECG machine measurements,
+  a CNN trained from scratch, and frozen ECG foundation models with a linear probe, with a pre-specified test of
+  pretraining contamination. No data from the credentialed dataset are included.
+type: software
+license: MIT
+version: 1.0.0
+date-released: "2026-11-22"
+authors:
+  - given-names: Agustino
+    family-names: Halim
+    affiliation: "Information Systems and Technology, Universitas OSO, Pontianak, Indonesia"
+    orcid: "https://orcid.org/0009-0008-4388-1174"
+keywords:
+  - electrocardiogram
+  - hypoglycemia
+  - hyperglycemia
+  - ECG foundation models
+  - pretraining contamination
+  - MIMIC-IV
+repository-code: "https://github.com/agustinohalim/ecg-glucose-benchmark"
