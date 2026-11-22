@@ -1,5 +1,7 @@
 # ecg-glucose-benchmark
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24433533.svg)](https://doi.org/10.5281/zenodo.24433533)
+
 Analysis code, pre-specified protocols and aggregate results for a study of hypoglycemia and severe hyperglycemia
 detection from inpatient 12-lead ECGs in MIMIC-IV-Ext-ECG-Glucose v1.0.0 (manuscript in preparation).
 
