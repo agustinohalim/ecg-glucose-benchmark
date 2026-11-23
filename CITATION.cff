@@ -5,11 +5,12 @@ abstract: >-
   Analysis code, aggregate results and analysis-plan excerpt for a study of hypoglycemia and severe hyperglycemia
   detection from inpatient 12-lead ECGs in MIMIC-IV-Ext-ECG-Glucose v1.0.0: demographics, ECG machine measurements,
   a CNN trained from scratch, and frozen ECG foundation models with a linear probe, with a pre-specified test of
-  pretraining contamination. No data from the credentialed dataset are included.
+  pretraining contamination, its extension with a fine-tuned positive control, and a
+  pre-registered confirmatory replication on recordings outside the cohort. No data from the credentialed dataset are included.
 type: software
 license: MIT
-version: 1.0.0
-date-released: "2026-11-22"
+version: 1.1.0
+date-released: "2026-11-23"
 authors:
   - given-names: Agustino
     family-names: Halim

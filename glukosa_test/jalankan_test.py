@@ -7,7 +7,7 @@ di VALIDATION lalu diterapkan ke TEST. Uji utama per tugas: M3b − M1-GB di TES
 tidak dinilai. Dicetak: AUROC VALIDATION tiap model (cek ulang terhadap Hasil 5–7), parameter kalibrasi ulang, tabel
 metrik TEST, selisih utama dan sekunder. Prediksi disimpan ke --prediksi (di luar repo). Keluaran stdout hanya agregat.
 
-Pakai venv-gpu, dari akar repo:
+Pakai lingkungan utama (README), dari akar repo:
     python glukosa_test/jalankan_test.py [--boot 1000] [--epoch 20]
         [--folder data/mimic-iv-ext-ecg-glucose] [--singgahan data/mimic-iv-ext-ecg-glucose/gelombang]
         [--prediksi data/mimic-iv-ext-ecg-glucose/prediksi]

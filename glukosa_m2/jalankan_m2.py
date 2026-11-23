@@ -5,7 +5,7 @@ gelombangnya tidak terbaca dibuang untuk semua model, jadi angka M0/M1 bisa sedi
 Susunan analisis sama dengan M1: latih TRAIN–nilai VALIDATION (non-EXCLUDE) untuk dua tugas biner dan tiga kelas, lalu
 kendali obat setara di ICU (Hasil_Glukosa_2.md). Split TEST tidak disentuh. Keluaran hanya agregat.
 
-Butuh singgahan dari bangun_singgahan.py. Pakai venv-gpu, dari akar repo:
+Butuh singgahan dari bangun_singgahan.py. Pakai lingkungan utama (README), dari akar repo:
     python glukosa_m2/jalankan_m2.py [--boot 1000] [--epoch 20]
         [--folder data/mimic-iv-ext-ecg-glucose] [--singgahan data/mimic-iv-ext-ecg-glucose/gelombang]
 Uji jalan (angkanya tidak dipakai): --epoch 1 --boot 20.

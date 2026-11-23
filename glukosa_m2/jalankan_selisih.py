@@ -6,7 +6,7 @@ diulang. CNN dilatih ulang; cuDNN tidak deterministik, jadi AUROC M2 bisa berges
 lagi. Prediksi per pasangan disimpan ke --simpan (di luar repo, drive terenkripsi) agar M3 nanti dibandingkan tanpa
 melatih ulang; berkas itu tidak dibuka di sesi asisten. Keluaran stdout hanya agregat. Split TEST tidak disentuh.
 
-Pakai venv-gpu, dari akar repo:
+Pakai lingkungan utama (README), dari akar repo:
     python glukosa_m2/jalankan_selisih.py [--boot 1000] [--epoch 20]
         [--simpan data/mimic-iv-ext-ecg-glucose/prediksi]
 """

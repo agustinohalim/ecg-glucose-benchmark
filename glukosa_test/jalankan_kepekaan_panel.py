@@ -9,7 +9,7 @@ dijalankan:
    121–240 menit).
 Keluaran stdout hanya agregat; hitungan 1–10 dicetak "<11", metrik disembunyikan bila positif < 11.
 
-Pakai venv-gpu, dari akar repo:
+Pakai lingkungan utama (README), dari akar repo:
     python glukosa_test/jalankan_kepekaan_panel.py [--boot 1000]
 """
 import sys

@@ -6,7 +6,7 @@ Kelompok usia ditetapkan sebelum dijalankan: 18–44, 45–64, 65–79, ≥ 80 t
 kosong, 53,5 % pasangan). Keluaran stdout hanya agregat; hitungan 1–10 dicetak "<11", metrik disembunyikan bila positif
 < 11.
 
-Pakai venv-gpu, dari akar repo:
+Pakai lingkungan utama (README), dari akar repo:
     python glukosa_test/jalankan_subkelompok.py [--boot 1000]
 """
 import sys

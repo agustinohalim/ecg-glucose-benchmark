@@ -4,7 +4,7 @@ benih (Hasil 4), dan M3 (Hasil 5) dibaca dari --prediksi dan dicocokkan baris de
 Dicetak: AUROC per benih, tabel metrik semua model, selisih berpasangan. Prediksi rerata disimpan ke
 utama_<tugas>_m2b3.npz. Keluaran stdout hanya agregat. Split TEST tidak disentuh.
 
-Pakai venv-gpu, dari akar repo:
+Pakai lingkungan utama (README), dari akar repo:
     python glukosa_m2/jalankan_m2_benih.py [--boot 1000] [--epoch 20]
         [--prediksi data/mimic-iv-ext-ecg-glucose/prediksi]
 """

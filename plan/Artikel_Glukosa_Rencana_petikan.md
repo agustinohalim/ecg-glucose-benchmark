@@ -1,11 +1,16 @@
 # Analysis plan (excerpt)
 
-Section C2 (dataset facts that shaped the design) and work steps 6, 7 and 9 of section F of the authors' working plan,
-in Indonesian. Step 7 is the TEST protocol, recorded before the TEST split was opened; step 9 is the pretraining
-contamination protocol, recorded before any ECG-FM embedding was computed. Each protocol was recorded in a dated
-commit of the authors' private working repository; the bold **Hasil N** paragraphs inside a step were appended after
-the corresponding run. The public timestamp is this release: version 1.0.0 precedes the run of step 9. Sections on
-journal choice, manuscript outline and internal review are omitted. File names `Hasil_Glukosa_N.md` refer to `notes/`.
+Section C2 (dataset facts that shaped the design) and work steps 6, 7 and 9–15 of section F of the authors' working
+plan, in Indonesian. Step 7 is the TEST protocol, recorded before the TEST split was opened; step 9 is the pretraining
+contamination protocol, recorded before any ECG-FM embedding was computed; step 11 extends it to machine-statement
+tasks and a fine-tuned positive control, recorded before those were scored. Steps 10, 12, 13 and 14 were recorded
+after results they respond to and are marked PASCA-HASIL (post hoc, descriptive). Step 15 is the confirmatory
+replication on recordings outside the glucose cohort; version 1.1.0 is released after step 15 and its code were
+committed and before its labels were computed or any embedding of those recordings was built. Each step was recorded
+in a dated commit of the authors' private working repository; the bold **Hasil N** paragraphs inside a step were
+appended after the corresponding run. "Telaah internal N" is the authors' N-th internal pre-submission review. Sections
+on journal choice, manuscript outline and internal review are omitted. File names `Hasil_Glukosa_N.md` refer to
+`notes/`.
 
 ## C2. Fakta dataset yang mengubah rancangan (README + kamus data v1.0.0, dibaca 20 Nov 2026)
 
@@ -122,3 +127,168 @@ journal choice, manuscript outline and internal review are omitted. File names `
    (`glukosa_test/jalankan_kontaminasi.py`), dijalankan sekali; galat teknis diperbaiki secara teknis dan dicatat.
    (g) Tafsir dibatasi: paparan di sini adalah pra-latih swaawas pada rekaman yang sama, tanpa label glukosa;
    kelompok dilihat dan tidak dilihat berbeda pasien. Hasil nol ditulis sebagai batas atas, bukan bukti tiada efek.
+   **Hasil 11 (22 Nov, dijalankan sekali, tanpa galat; kode v1.0.0 dirilis sebelumnya):** inflasi **tidak
+   didukung** pada kedua tugas. DiD hipo 0,028 [−0,003; 0,060], hiper berat 0,006 [−0,019; 0,032]; batas inflasi
+   0,060 dan 0,032. M1-GB pun berbeda antarkelompok (hipo 0,051 [0,010; 0,099]), jadi selisih mentah tidak bisa
+   dipakai. M3c − M3b −0,021 [−0,035; −0,008] dan −0,019 [−0,027; −0,011]: model terkontaminasi lebih rendah.
+10. **Analisis tambahan atas telaah internal 2 (dicatat 22 Nov 2026 sebelum dijalankan; PASCA-HASIL, deskriptif, tidak
+   mengubah aturan keputusan langkah 9).** Pilihan penulis "Putaran teks + uji kecil". Satu skrip
+   (`glukosa_test/jalankan_kontaminasi_tambahan.py`) memakai prediksi tersimpan langkah 9 (`kontaminasi_*.npz`, tanpa
+   melatih ulang; baris dicek sejajar), mencetak agregat saja:
+   (a) **Uji permutasi paparan:** label dilihat/tidak diacak ulang per pasien (jumlah pasien dilihat tetap), 2.000
+   permutasi, benih `BENIH[0]`; untuk tiap model selisih dilihat − tidak dan tiap DiD: SD sebaran nol dan p dua sisi
+   nilai teramati. Menjawab apakah selisih M1-GB 0,051 sesuai dengan kebetulan bila split acak.
+   (b) **Keseimbangan kelompok:** beda rerata terstandar (SMD) untuk usia, laki-laki, ICU, prevalensi positif, pasangan
+   per pasien.
+   (c) **DiD plasebo antar model bersih:** M3 − M3b, M1-GB − M3b, M1-GB − M3 (selisih-dalam-selisih dua model tanpa
+   paparan), CI bootstrap.
+   (d) **Bootstrap 10.000** untuk DiD utama dan sekunder (galat Monte Carlo batas −0,003).
+   (e) **Kepekaan definisi paparan:** tidak dilihat = hanya `test` ECG-FM (tanpa `valid`); dan DiD utama di VALIDATION
+   dan TEST terpisah.
+   (f) **Efek minimum terdeteksi:** 2,8 × SD bootstrap DiD utama (80 % daya, α 0,05 dua sisi), per tugas.
+   (g) **Skala logit:** DiD atas logit(AUROC).
+   Aturan tafsir ditetapkan sekarang: (a) p < 0,05 untuk selisih model tanpa paparan = bukti beda kelompok di luar
+   kebetulan; bila tidak, "selisih mentah bising" (bukan "terkacau"). Hipo disebut inkonklusif bila batas atas DiD ≥
+   setengah efek utama (0,033); hiper berat terbatasi bila batas atas < 0,033.
+11. **Perluasan uji kontaminasi atas telaah internal 3 (dicatat 22 Nov 2026 malam, sebelum embedding ECG-FM *fine-tuned*
+   dibangun dan sebelum tugas pernyataan atau evaluasi *cross-fitting* dinilai).** Pilihan penulis "Perluas uji".
+   Yang sudah dilihat sebelum protokol ini: Hasil 11–12 (glukosa) dan hitungan agregat frekuensi pernyataan mesin
+   (`glukosa_test/hitung_pernyataan.py`, tanpa model). Satu skrip analisis, mencetak agregat saja.
+   (a) **Model:** ECG-FM pretrained (terpapar swaawas), ECG-JEPA (pembanding utama), ECGFounder (bersih kedua), model
+   ukuran (GB, 13 ukuran mesin + usia + jenis kelamin), dan **ECG-FM *fine-tuned*** (`mimic_iv_ecg_finetuned.pt`,
+   wanglab/ecg-fm), dilatih dengan label diagnosis rekaman bagian `train` (label_def.csv repo ECG-FM memuat hitungan
+   positif per train/valid/test). Embedding *fine-tuned* = rerata token `encoder.extract_features`, pra-proses sama
+   dengan pretrained. Semua beku + probe L2 yang sama.
+   (b) **Tugas pernyataan mesin** (MIMIC-IV-ECG v1.0 `machine_measurements.csv`, terbuka): unit = EKG unik dengan
+   embedding (376.648); positif bila gabungan report_0–17 (huruf kecil) cocok pola, negatif semua EKG lain: AF
+   `atrial fibrillation`; LBBB `left bundle branch block|\blbbb\b`; RBBB `right bundle branch block|\brbbb\b`; AV blok
+   derajat 1 `(1st|first) degree a-?v block`; LVH `left ventricular hypertrophy|\blvh\b`. Empat yang pertama termasuk
+   label *fine-tuned* ECG-FM; LVH tidak. Usia, jenis kelamin dan ukuran mesin per EKG diambil dari pasangan pertama EKG
+   itu di berkas glukosa.
+   (c) **Evaluasi *cross-fitting*:** semua unit (tugas glukosa: pasangan non-EXCLUDE dari ketiga split dataset; tugas
+   pernyataan: EKG) dibagi 5 lipatan per pasien (`GroupKFold` atas pasien teracak, benih `BENIH[0]`); tiap model
+   dilatih pada 4 lipatan dan memprediksi lipatan sisanya. C probe: tugas glukosa memakai C terpilih di TRAIN
+   (langkah 8/9), tanpa penyetelan ulang; tugas pernyataan memilih C dari {10⁻³, 10⁻², 10⁻¹, 1} lewat 3 lipatan dalam
+   per pasien pada subsampel 60.000 unit dari bagian latih lipatan 1, lalu tetap untuk kelima lipatan. GB: setelan
+   langkah 8.
+   (d) **Estimand:** per tugas, DiD = [AUROC dilihat − tidak dilihat] model − pembanding, atas prediksi di luar lipatan.
+   Utama: ECG-FM pretrained − ECG-JEPA. Sekunder: lawan ECGFounder. Plasebo: ECGFounder − ECG-JEPA. Kontrol positif:
+   ECG-FM *fine-tuned* − ECG-JEPA. Bootstrap bergugus pasien 2.000 ulangan, permutasi paparan per pasien 1.000; tidak
+   dilihat = `valid` ∪ `test`, kepekaan `test` saja; skala logit sekunder.
+   (e) **Aturan keputusan (ditetapkan sekarang):** margin ε = 0,01 AUROC, separuh selisih ECG-FM − ECG-JEPA di Hasil 11
+   (≈ 0,02), sebagai ukuran inflasi yang dapat membalik peringkat encoder. Per tugas: "inflasi didukung" bila batas
+   bawah DiD > 0; "di bawah skala peringkat" bila batas atas < ε; selain itu "tak terputuskan". Ringkasan: rerata DiD
+   lima tugas pernyataan (bobot sama) dengan CI dari ulangan bootstrap yang sama, dibaca dengan aturan yang sama.
+   Tugas dengan AUROC kedua kelompok > 0,97 untuk pembanding utama ditandai "dekat plafon" (DiD AUROC kecil karena
+   plafon; skala logit ikut dibaca).
+   (f) **Kontrol positif lolos** bila batas bawah DiD *fine-tuned* − ECG-JEPA > 0 pada ≥ 1 dari empat tugas berlabel.
+   Bila tidak lolos, kepekaan desain dinyatakan tidak terbukti dan naskah mengatakannya.
+   (g) **Glukosa:** tafsir langkah 9 tetap (inflasi tak didukung, batas atas dilaporkan); ambang 0,033 langkah 10 tidak
+   lagi dipakai sebagai vonis. DiD glukosa *cross-fitting* dibaca dengan aturan (e).
+12. **Analisis tambahan atas Hasil 13 untuk temuan telaah internal 3 (dicatat 22 Nov 2026 larut malam, sesudah Hasil 13,
+   sebelum skrip ditulis; PASCA-HASIL, deskriptif, tidak mengubah vonis langkah 11).** Prediksi tersimpan langkah 11,
+   tanpa melatih ulang; benih 20261120.
+   (a) **Keseimbangan** per tugas atas semua unit yang terpetakan ke split ECG-FM: SMD usia, laki-laki, ICU (glukosa
+   saja; tabel pernyataan tak memuat ICU), prevalensi positif, unit per pasien; dibaca dengan ambang |SMD| < 0,1.
+   (b) **Efek minimum terdeteksi** = 2,8 × SD bootstrap (1.000 ulangan bergugus pasien) untuk DiD utama dan kontrol
+   positif, per tugas.
+   (c) **Presisi dari pembanding:** di bawah nol permutasi (1.000 penempatan ulang per pasien) SD selisih ECG-FM
+   sendiri, SD DiD utama, korelasi selisih ECG-FM dengan selisih ECG-JEPA, dan SD penaksir kontrol-variat
+   selisih ECG-FM − b · selisih ECG-JEPA dengan b = kov/var di bawah nol; titiknya juga dicetak. Dibaca sebagai
+   deskripsi; vonis tetap DiD (b = 1).
+13. **Kontras langsung paparan swaawas lawan kontrol positif, atas telaah internal 4 (dicatat 23 Nov 2026, sesudah Hasil 13–14
+   dan telaah internal 4, sebelum skrip ditulis; PASCA-HASIL, deskriptif, tidak mengubah vonis langkah 11).** Pilihan penulis
+   "Langkah 13 + revisi". Temuan kritis telaah internal 4: margin ε = 0,01 juga diloloskan kontrol positif, dan selisih kedua
+   paparan tidak pernah ditaksir. Prediksi tersimpan langkah 11, tanpa melatih ulang; bootstrap bergugus pasien 2.000
+   ulangan, benih 20261120, ulangan yang sama untuk semua besaran dalam satu kelompok tugas (dua tugas glukosa
+   masing-masing; lima pernyataan bersama). Yang sudah dilihat: semua angka Hasil 13–14; selisih langsung dan rasio
+   belum pernah dihitung.
+   (a) **Selisih langsung** Δ = DiD kontrol positif − DiD utama = [selisih dilihat − tidak ECG-FM *fine-tuned*] −
+   [selisih ECG-FM pretrained]; ECG-JEPA saling hapus. Per tugas, skala AUROC dan logit(AUROC), CI 95 % kuantil.
+   Ringkasan: rerata Δ empat tugas berlabel (AF, LBBB, RBBB, AV blok 1), bobot sama.
+   (b) **Rasio** R = DiD utama / DiD kontrol positif, hanya untuk tugas tempat batas bawah DiD kontrol positif > 0
+   pada skala itu (Hasil 13: empat tugas berlabel pada skala AUROC); CI kuantil bootstrap, ulangan dengan penyebut ≤ 0
+   dihitung dan jumlahnya dicetak. Juga rasio rerata empat tugas (rerata DiD utama / rerata DiD kontrol positif).
+   (c) **Log-loss** (aturan skor sejati, tak berplafon seperti AUROC): per model, rerata log-loss berbobot di kelompok
+   dilihat dan tidak dilihat atas peluang di luar lipatan; DiD log-loss dengan tanda dibalik (tidak dilihat − dilihat,
+   sehingga positif = lebih baik pada rekaman dilihat) untuk utama dan kontrol positif, serta Δ seperti (a); CI
+   bootstrap yang sama.
+   (d) **Tabel logit per tugas:** DiD utama dan kontrol positif pada skala logit dengan CI, ketujuh tugas (sebagian
+   sudah ada di Hasil 13; dicetak ulang dari ulangan yang sama agar satu tabel).
+   **Aturan tafsir (ditetapkan sekarang):** pada suatu skala, paparan swaawas disebut "lebih kecil dari paparan label"
+   bila batas bawah Δ > 0; batas atas R dilaporkan sebagai "paling besar R kali efek paparan label". Tafsir ringkasan
+   memakai rerata empat tugas berlabel. Bila batas bawah Δ ≤ 0, naskah menyatakan kedua paparan tidak terbedakan
+   pada skala itu. Tugas glukosa dan LVH dilaporkan tanpa tafsir rasio (kontrol positif tak terdeteksi). Satu skrip
+   (`glukosa_perluasan/jalankan_kontras_langsung.py`), dijalankan sekali; galat teknis diperbaiki dan dicatat.
+14. **Rasio terhadap efek label saja, atas telaah internal 6 (dicatat 23 Nov 2026, sesudah Hasil 15 dan telaah internal 6, sebelum skrip
+   ditulis; PASCA-HASIL, deskriptif, tidak mengubah vonis langkah 11).** Pilihan penulis "Langkah 14 + revisi".
+   Temuan kritis telaah internal 6 (methods M1): ECG-FM *fine-tuned* berangkat dari encoder pretrained yang sama, sehingga
+   rekaman dilihat terpapar dua kali (swaawas + label); DiD kontrol positif = efek swaawas + efek label, dan R langkah
+   13 = swaawas / (swaawas + label), bukan swaawas / label. Bila kedua efek menjumlah, efek label saja = Δ langkah 13.
+   Yang sudah dilihat: semua angka Hasil 15 (R AUROC rerata 0,24 [−0,10; 0,48]; logit 0,09 [−0,05; 0,21]; log-loss
+   0,06 [−0,16; 0,23]); transformasi R/(1 − R) memberi batas atas ≈ 0,92 / 0,27 / 0,30 bila semua ulangan R < 1.
+   Data, prediksi, ulangan dan benih sama dengan langkah 13 (2.000 ulangan, benih 20261120, ulangan bersama per
+   kelompok tugas).
+   (a) **Rasio Q = DiD utama / Δ** (swaawas terhadap label saja), per ulangan, CI 95 % kuantil; jumlah ulangan Δ ≤ 0
+   dicetak. Skala AUROC, logit(AUROC), log-loss. Per tugas untuk empat tugas berlabel, rerata empat tugas berlabel
+   (rerata DiD utama / rerata Δ), dan rerata lima pernyataan (empat berlabel + LVH) karena rerata lima tugas
+   dipraspesifikasi di langkah 11 tetapi belum dilaporkan (methods M5).
+   (b) **Aturan "lebih kecil dari paparan label" (methods M2):** batas bawah 95 % dari Δ − DiD utama (= DiD kontrol
+   positif − 2 · DiD utama) > 0. Aturan langkah 13 (batas bawah Δ > 0) hanya menunjukkan paparan label ada; tidak
+   dipakai lagi untuk perbandingan besar. Tidak ada ambang lain ("separuh" dsb.); naskah melaporkan batas atas Q.
+   (c) **Kepekaan TEST saja (devils-advocate X1):** (a) dan (b) diulang dengan tidak dilihat = `test` saja (rekaman
+   `valid` dibuang), ulangan dan benih sama.
+   (d) **Selisih mutlak:** rerata DiD utama empat tugas berlabel pada skala AUROC beserta CI dicetak ulang agar batas
+   mutlak (≈ 0,001) dan rasio berasal dari ulangan yang sama.
+   Tafsir: bila batas bawah (b) > 0 pada skala AUROC untuk rerata empat tugas berlabel, naskah menyatakan paparan
+   swaawas lebih kecil dari paparan label di skala itu, dengan batas atas Q; bila tidak, keduanya tidak terbedakan
+   di skala itu. Hasil utama naskah menjadi batas mutlak; rasio pelengkap. Satu skrip
+   (`glukosa_perluasan/jalankan_rasio_label.py`), dijalankan sekali; galat teknis diperbaiki dan dicatat.
+15. **Replikasi konfirmatori pada rekaman yang belum pernah dinilai (dicatat 23 Nov 2026 malam, sesudah telaah internal 7,
+   sebelum kode replikasi ditulis, sebelum embedding rekaman ini dibangun, dan sebelum label pernyataan rekaman ini
+   dihitung).** Pilihan penulis "Replikasi konfirmatori", sampel "Lepas rekaman", pra-registrasi "Zenodo publik":
+   protokol ini dan kodenya diunggah sebagai versi baru rekaman Zenodo Glukosa sebelum embedding dibangun (unggahan
+   atas konfirmasi penulis). Alasan: telaah internal 5–7 masing-masing menemukan kritis baru pada lapisan perbandingan
+   pasca-hasil; replikasi menguji klaim utama (batas mutlak + kontrol positif) pada data baru dengan aturan yang
+   ditetapkan sebelum data itu disentuh. Yang sudah dilihat: semua Hasil 1–16; hitungan agregat calon sampel
+   (skrip sementara `hitung_replikasi.py`, tanpa label atau model): 416.503 rekaman daftar split ECG-FM di luar
+   kohort glukosa (109.971 pasien; train 333.118, valid 41.908, test 41.477), di antaranya 53.413 rekaman dari 29.391
+   pasien yang tidak ada di kohort.
+   (a) **Data (semua terbuka kecuali daftar pengecualian):** MIMIC-IV-ECG v1.0 (`record_list.csv`,
+   `machine_measurements.csv`, gelombang dari ZIP) dan daftar split ECG-FM (`meta_split_mimic_iv_ecg.csv`, commit
+   3ff744ef). Unit = rekaman di daftar split yang `path`-nya tidak ada di kohort MIMIC-IV-Ext-ECG-Glucose (kohort hanya
+   dipakai sebagai daftar pengecualian jalur dan pasien). Rekaman yang gelombangnya gagal dibaca atau embedding-nya
+   tidak terhingga dibuang dan dihitung. Dilihat = `train`; tidak dilihat = `valid` ∪ `test`.
+   (b) **Tugas:** lima pernyataan mesin dengan pola **identik** langkah 11b (AF, LBBB, RBBB, AV blok 1, LVH), atas
+   gabungan report_0–17 huruf kecil. Pemeriksaan keselarasan (deskriptif, dicetak sebelum model): prevalensi tiap pola
+   per split dibanding persentase positif label ECG-FM di `label_def.csv` repo ECG-FM (AF, LBBB, RBBB, 1st degree AV
+   block); pola tidak diubah apa pun hasilnya.
+   (c) **Model:** ECG-FM pretrained (`mimic_iv_ecg_physionet_pretrained.pt`), ECG-FM *fine-tuned*
+   (`mimic_iv_ecg_finetuned.pt`, kontrol positif), ECG-JEPA (pembanding). ECGFounder dan model ukuran tidak dipakai.
+   Embedding dengan `glukosa_m3/bangun_embedding.py` dan pra-proses yang sama dengan langkah 11, di folder singgahan
+   baru di luar repo.
+   (d) **Evaluasi:** probe L2 identik langkah 11c (`glukosa_perluasan/silang_lipatan.py`): 5 lipatan per pasien,
+   benih 20261120; C dari {10⁻³, 10⁻², 10⁻¹, 1} lewat 3 lipatan dalam per pasien pada subsampel 60.000 unit bagian latih
+   lipatan 1, per tugas dan model. DiD AUROC (dilihat − tidak dilihat) model − ECG-JEPA atas prediksi di luar lipatan;
+   bootstrap bergugus pasien 2.000 ulangan, benih 20261120, semua model dan tugas pada ulangan yang sama.
+   (e) **Hipotesis dan aturan (ditetapkan sekarang).**
+   R1 — gerbang kontrol positif: batas bawah 95 % rerata DiD ECG-FM *fine-tuned* empat tugas berlabel (AF, LBBB, RBBB,
+   AV blok 1; bobot sama) > 0. Bila gagal, replikasi dinyatakan tidak informatif dan naskah mengatakannya.
+   R2 — konfirmatori utama: batas atas 95 % rerata DiD ECG-FM pretrained empat tugas berlabel (skala AUROC) < 0,002.
+   Bila R1 dan R2 lolos: klaim "paling besar 0,002 AUROC rata-rata pada pernyataan berlabel" terkonfirmasi. Bila R2
+   gagal dengan batas atas < 0,01: batas dilaporkan apa adanya dan klaim 0,002 tidak terkonfirmasi. Bila batas bawah
+   > 0: inflasi oleh pra-latih terdeteksi pada replikasi, dan naskah mengatakannya.
+   (f) **Sekunder (deskriptif, tanpa vonis tambahan):** rerata lima pernyataan; per tugas (termasuk LVH); skala
+   logit(AUROC); tidak dilihat = `test` saja; subset pasien di luar kohort (53.413 rekaman); kepekaan lipatan: seluruh
+   evaluasi rerata empat tugas diulang dengan benih lipatan 20261121 dan 20261122 (C dipilih ulang), dilaporkan sebagai
+   rentang tiga nilai; keseimbangan kelompok (SMD prevalensi, unit per pasien, denyut jantung, durasi QRS dari
+   `machine_measurements.csv`). Tidak ada rasio atau perbandingan besar antara pra-latih dan *fine-tuning*.
+   (g) **Proses:** dua skrip di `glukosa_replikasi/`: `siapkan_replikasi.py` (daftar rekaman + tabel unit di luar repo,
+   cetak hitungan dan keselarasan saja) dan `jalankan_replikasi.py` (probe, bootstrap, vonis). Keduanya dikomit dan
+   diunggah ke Zenodo bersama protokol ini sebelum embedding dibangun; dijalankan sekali; galat teknis diperbaiki
+   dan dicatat di berkas hasil. Keluaran stdout hanya agregat (hitungan 1–10 disamarkan).
+   **Catatan proses 23 Nov 2026 (sebelum data replikasi disentuh):** pemeriksa gaya kode menolak satu berkas besar,
+   sehingga `jalankan_replikasi.py` dipecah menjadi tiga modul dengan isi yang sama: `prediksi_replikasi.py` (unit,
+   embedding, prediksi di luar lipatan), `statistik_replikasi.py` (kontras, bootstrap, rerata DiD), dan
+   `jalankan_replikasi.py` (cetak dan vonis R1/R2). Diuji asap pada data sintetis acak (6.000 unit buatan, bukan data
+   MIMIC) agar galat teknis tertangkap sebelum dijalankan sekali pada data nyata. Komit 4241e8a.

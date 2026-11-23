@@ -6,7 +6,7 @@ Keluaran di folder singgahan (di luar repo): emb_<model>.npy (n × dimensi, floa
 dan emb_<model>_selesai.npy. Bila terputus, jalankan ulang; baris selesai dilewati. Pra-proses di proses pekerja CPU,
 model di GPU. Yang dicetak hanya kemajuan dan hitungan agregat.
 
-Pakai venv-gpu, dari akar repo:
+Pakai lingkungan utama (README), dari akar repo:
     python glukosa_m3/bangun_embedding.py [--model ecgfounder|ecgjepa]
         [--zip data/mimic-iv-ecg-1.0.zip] [--singgahan data/mimic-iv-ext-ecg-glucose/gelombang]
         [--pekerja 12]

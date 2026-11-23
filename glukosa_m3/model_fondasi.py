@@ -34,4 +34,6 @@ class ModelFondasi:
 ECGFOUNDER = ModelFondasi("ecgfounder", "M3 ECGFounder beku + probe L2", "M3", 1024, "M2 CNN gelombang", "M2", ())
 ECGJEPA = ModelFondasi("ecgjepa", "M3b ECG-JEPA beku + probe L2", "M3b", 768, ECGFOUNDER.nama, "M3", ("_m3",))
 ECGFM = ModelFondasi("ecgfm", "M3c ECG-FM beku + probe L2 (terkontaminasi)", "M3c", 768, ECGJEPA.nama, "M3b", ())
-MODEL_FONDASI = {m.kode: m for m in (ECGFOUNDER, ECGJEPA, ECGFM)}
+ECGFM_FT = ModelFondasi("ecgfm_ft", "ECG-FM fine-tuned beku + probe L2 (kontrol positif)", "FT", 768, ECGJEPA.nama,
+                        "M3b", ())
+MODEL_FONDASI = {m.kode: m for m in (ECGFOUNDER, ECGJEPA, ECGFM, ECGFM_FT)}

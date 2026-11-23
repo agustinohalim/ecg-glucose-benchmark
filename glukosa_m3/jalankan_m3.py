@@ -8,7 +8,7 @@ bergugus pasien, dua tugas biner; tiga kelas tidak. Selisih berpasangan terhadap
 untuk M3b), M1-GB, dan M0. Prediksi disimpan ke folder yang sama (di luar repo). Keluaran stdout hanya agregat. Split
 TEST tidak disentuh.
 
-Butuh emb_<model>.npy dari bangun_embedding.py. Pakai venv-gpu, dari akar repo:
+Butuh emb_<model>.npy dari bangun_embedding.py. Pakai lingkungan utama (README), dari akar repo:
     python glukosa_m3/jalankan_m3.py [--model ecgfounder|ecgjepa]
         [--boot 1000] [--folder data/mimic-iv-ext-ecg-glucose]
         [--singgahan data/mimic-iv-ext-ecg-glucose/gelombang] [--prediksi data/mimic-iv-ext-ecg-glucose/prediksi]
