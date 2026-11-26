@@ -1,11 +1,11 @@
 {
   "title": "ecg-glucose-benchmark: analysis code, pre-specified protocols and aggregate results for detecting hypo- and hyperglycemia from inpatient 12-lead ECGs",
-  "description": "<p>Analysis code, aggregate results and analysis-plan excerpt for a study of hypoglycemia and severe hyperglycemia detection from inpatient 12-lead ECGs in MIMIC-IV-Ext-ECG-Glucose v1.0.0, with waveforms from MIMIC-IV-ECG v1.0, and of pretraining contamination of ECG foundation models. Models: demographics, ECG machine measurements, a 1-D CNN trained from scratch, and frozen ECG foundation models with an L2 logistic probe (ECGFounder and ECG-JEPA, pretrained without MIMIC-IV-ECG; ECG-FM pretrained and fine-tuned, both trained on part of MIMIC-IV-ECG).</p><p>Version 1.1.0 adds the results of the contamination test and its extension to machine-statement tasks with a fine-tuned positive control (notes 11 to 16; notes 12 and 14 to 16 are post hoc and descriptive), and pre-registers a confirmatory replication (plan step 15) on 416,503 MIMIC-IV-ECG recordings outside the glucose cohort: protocol and code (glukosa_replikasi/) are released before the labels of those recordings were computed and before any of their embeddings was built. Primary rule: the upper 95% bound of the mean seen-minus-unseen AUROC difference-in-differences of pretrained ECG-FM against ECG-JEPA over four labelled statement tasks is below 0.002, gated on the fine-tuned positive control.</p><p>No data from the credentialed dataset are included: the scripts run locally on the PhysioNet releases and print aggregate tables only, with counts between 1 and 10 masked. Code: MIT. Notes and plan excerpt: CC BY 4.0.</p>",
+  "description": "<p>Analysis code, aggregate results and analysis-plan excerpt for a study of hypoglycemia and severe hyperglycemia detection from inpatient 12-lead ECGs in MIMIC-IV-Ext-ECG-Glucose v1.0.0, with waveforms from MIMIC-IV-ECG v1.0, and of pretraining contamination of ECG foundation models. Models: demographics, ECG machine measurements, a 1-D CNN trained from scratch, and frozen ECG foundation models with an L2 logistic probe (ECGFounder and ECG-JEPA, pretrained without MIMIC-IV-ECG; ECG-FM pretrained and fine-tuned, both trained on part of MIMIC-IV-ECG).</p><p>Version 1.1.0 pre-registered a confirmatory replication (plan step 15) on 416,503 MIMIC-IV-ECG recordings outside the glucose cohort; it was run once and both rules passed (note 17). Version 1.2.0 adds that result, a direct pretraining-membership check (plan step 16: ECG-FM's own contrastive loss on 22,058 unseen against 22,058 seen patients; recorded in a dated private commit before its code; rule M1 not met, note 18), and pre-registers a continued-pretraining positive control (plan step 17): ECG-FM's self-supervised pretraining is continued for four epochs on all recordings of a random half of the unseen patients, creating known members. Rules: the loss check detects the injected half (K1); the injected-minus-held-out AUROC gap of the continued model exceeds the original model's on LVH (P1) and on the mean of four labelled statements (P2); the comparator's gap contains zero (N0). Protocol and code (glukosa_kontrol/) are released before any training, embedding or score of this step.</p><p>No data from the credentialed dataset are included: the scripts run locally on the PhysioNet releases and print aggregate tables only, with counts between 1 and 10 masked. Code: MIT. Notes and plan excerpt: CC BY 4.0.</p>",
   "upload_type": "software",
   "license": "MIT",
   "access_right": "open",
   "language": "eng",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "creators": [
     {
       "name": "Halim, Agustino",
@@ -21,7 +21,9 @@
     "pretraining contamination",
     "MIMIC-IV",
     "replication",
-    "pre-registration"
+    "pre-registration",
+    "membership inference",
+    "positive control"
   ],
   "related_identifiers": [
     {

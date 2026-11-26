@@ -1,12 +1,15 @@
 # Analysis plan (excerpt)
 
-Section C2 (dataset facts that shaped the design) and work steps 6, 7 and 9–15 of section F of the authors' working
+Section C2 (dataset facts that shaped the design) and work steps 6, 7 and 9–17 of section F of the authors' working
 plan, in Indonesian. Step 7 is the TEST protocol, recorded before the TEST split was opened; step 9 is the pretraining
 contamination protocol, recorded before any ECG-FM embedding was computed; step 11 extends it to machine-statement
 tasks and a fine-tuned positive control, recorded before those were scored. Steps 10, 12, 13 and 14 were recorded
 after results they respond to and are marked PASCA-HASIL (post hoc, descriptive). Step 15 is the confirmatory
 replication on recordings outside the glucose cohort; version 1.1.0 is released after step 15 and its code were
-committed and before its labels were computed or any embedding of those recordings was built. Each step was recorded
+committed and before its labels were computed or any embedding of those recordings was built. Step 16 is the direct
+membership check, recorded before its code was written and before any loss was scored. Step 17 is the
+continued-pretraining positive control; version 1.2.0 is released after step 17 and its code were committed and before
+any training, embedding or score of that step. Each step was recorded
 in a dated commit of the authors' private working repository; the bold **Hasil N** paragraphs inside a step were
 appended after the corresponding run. "Telaah internal N" is the authors' N-th internal pre-submission review. Sections
 on journal choice, manuscript outline and internal review are omitted. File names `Hasil_Glukosa_N.md` refer to
@@ -292,3 +295,140 @@ on journal choice, manuscript outline and internal review are omitted. File name
    embedding, prediksi di luar lipatan), `statistik_replikasi.py` (kontras, bootstrap, rerata DiD), dan
    `jalankan_replikasi.py` (cetak dan vonis R1/R2). Diuji asap pada data sintetis acak (6.000 unit buatan, bukan data
    MIMIC) agar galat teknis tertangkap sebelum dijalankan sekali pada data nyata. Komit 4241e8a.
+   **Pra-registrasi publik:** atas konfirmasi penulis, rilis GitHub v1.1.0 (komit publik 277bf02) diarsipkan Zenodo
+   sebagai versi 1.1.0, DOI 10.5281/zenodo.24452624, 23 Nov 2026 02:13 UTC — sebelum `siapkan_replikasi.py` dijalankan
+   (label rekaman replikasi belum dihitung) dan sebelum embedding replikasi dibangun.
+   **Hasil 17 (26 Nov 2026, `Hasil_Glukosa_17.md`):** R1 LOLOS (rerata DiD *fine-tuned* empat tugas berlabel 0,002
+   [0,001; 0,003] AUROC); R2 LOLOS (pretrained 0,0004 [−0,0004; 0,0012], batas atas < 0,002); inflasi tidak terdeteksi;
+   klaim 0,002 terkonfirmasi. TEST saja dan ketiga benih lipatan sejalan. Sekunder deskriptif: pada subset pasien di
+   luar kohort kontrol positif tidak terdeteksi di AUROC, dan LVH memberi DiD > 0 untuk kedua model (pretrained 0,026
+   [0,005; 0,050]); dilaporkan di naskah tanpa vonis. Jalan pertama selesai menghitung semua prediksi tetapi berkas
+   keluarannya tertimpa sebelum dibaca; jalan kedua dari prediksi tersimpan, benih sama, kode tak berubah (dicatat di
+   Hasil 17 §1).
+
+16. **Uji keanggotaan pra-latih langsung (dicatat 26 Nov 2026, sesudah telaah internal 8, sebelum kodenya ditulis dan sebelum
+   skor kehilangan apa pun dihitung).** Pilihan penulis "Pre-register + run check". Alasan: kritis konsensus telaah internal 8
+   (empat dari lima peran): daftar split tidak pernah diuji sebagai daftar pra-latih; bila pra-latih memakai undian
+   pasien lain, DiD swaawas mendekati nol karena konstruksi, sedangkan kontrol positif tetap terdeteksi karena label
+   *fine-tuning* berasal dari bagian `train` daftar itu. Yang sudah dilihat: semua Hasil 1–17; belum ada skor
+   kehilangan pra-latih yang dihitung.
+   (a) **Unit:** tabel unit replikasi langkah 15. Satu rekaman per pasien diundi (benih 20261120). Tidak dilihat =
+   semua pasien yang rekamannya di `valid` ∪ `test` (22.058 pasien); dilihat = sampel acak pasien `train` sebanyak
+   jumlah yang sama (benih 20261120). Rekaman yang gelombangnya gagal dibaca atau skornya tidak terhingga dibuang dan
+   dihitung.
+   (b) **Skor:** kehilangan InfoNCE wav2vec 2.0 milik ECG-FM pretrained sendiri (`mimic_iv_ecg_physionet_pretrained.pt`
+   dengan kuantisator dan proyeksi bawaan, mode eval), pra-proses sama dengan embedding (12 sadapan, standardisasi per
+   sadapan atas 10 s, dua segmen 5 s, tanpa penyamaran sadapan), parameter topeng dan negatif dari konfigurasi
+   checkpoint (mask_prob 0,65, panjang 10, 100 negatif dari rekaman yang sama). Skor per rekaman = rerata kehilangan
+   atas langkah bertopeng kedua segmen dan K = 4 undian topeng dan negatif (benih torch dan numpy 20261120 sekali di
+   awal, urutan rekaman tetap).
+   (c) **Aturan M1 (ditetapkan sekarang):** D = rerata skor tidak dilihat − rerata skor dilihat; CI 95 % bootstrap
+   2.000 ulangan atas pasien, benih 20261120. Bila batas bawah D > 0, daftar terkonfirmasi menandai keanggotaan
+   pra-latih, dan batas 0,002 dibaca sebagai batas efek keanggotaan. Bila tidak, keanggotaan tidak terkonfirmasi:
+   naskah menyatakan batas itu bersyarat pada daftar yang menandai keanggotaan pra-latih, dengan dua penjelasan yang
+   tidak dapat dipisahkan (daftar tidak cocok dengan pra-latih, atau keanggotaan tidak meninggalkan jejak yang
+   terdeteksi pada kehilangan), dan judul serta abstrak memuat syarat itu.
+   (d) **Kontrol negatif:** pasien tidak dilihat dibagi dua secara acak (benih 20261120); D plasebo antara kedua
+   paruh harus berselang yang memuat nol. Bila tidak, uji dinyatakan bermasalah dan M1 tidak dibaca.
+   (e) **Sekunder deskriptif:** AUROC keanggotaan dari −skor dengan CI bootstrap yang sama; D terpisah untuk `valid`
+   dan `test`; kesesuaian segmen (kosinus rerata token keluaran kedua segmen tanpa topeng, pendekatan untuk suku CMSC)
+   dilihat − tidak dilihat.
+   (f) **Pasca-hasil deskriptif (atas telaah internal 8, methods X4 dan devil's advocate X6), tanpa vonis:** pada subset pasien
+   di luar kohort, celah AUROC dilihat − tidak dilihat untuk LVH dari tiap model (ECG-FM pretrained, *fine-tuned*,
+   ECG-JEPA), dari prediksi tersimpan langkah 15, bootstrap dan benih langkah 15.
+   (g) **Proses:** skrip di `glukosa_replikasi/` dikomit sebelum dijalankan; diuji asap pada data sintetis; dijalankan
+   sekali; stdout agregat saja. Hasil → `Hasil_Glukosa_18.md`.
+   **Catatan proses 26 Nov 2026 (sebelum skor apa pun dihitung pada data nyata):** kode dipecah per tugas:
+   `skor_keanggotaan.py` (kehilangan InfoNCE dan kosinus segmen per rekaman), `baca_keanggotaan.py` (gelombang dari ZIP,
+   urutan tetap), `hitung_keanggotaan.py` (benih, simpanan skor di luar repo), `statistik_keanggotaan.py` (pemilihan
+   unit, paruh plasebo, bootstrap), `uji_keanggotaan.py` (cetak dan vonis M1), dan `celah_lvh.py` (butir f). Rincian
+   yang protokol tidak sebut: dalam satu panggilan model, K undian kedua segmen satu rekaman diproses bersama (8 deret),
+   sehingga pemotongan jumlah langkah bertopeng ke minimum batch fairseq hanya terjadi di dalam rekaman itu; benih
+   dipasang sesudah checkpoint dimuat; pasien yang punya rekaman di `train` dan di `valid`/`test` (bila ada) masuk
+   kelompok tidak dilihat dengan rekaman `valid`/`test`-nya; rekaman dengan kosinus tak terhingga juga dibuang. Diuji
+   asap pada ZIP WFDB sintetis (466 rekaman acak, bukan data MIMIC; dua jalan memberi skor identik) dan pada folder
+   replikasi sintetis langkah 15 (`celah_lvh.py`).
+   **Hasil 18 (26 Nov 2026, `Hasil_Glukosa_18.md`):** kontrol negatif LOLOS (D plasebo −0,0009 [−0,0101; 0,0083]); **M1
+   TIDAK terkonfirmasi** (D = 0,0055 [−0,0008; 0,0122]; AUROC keanggotaan 0,504 [0,499; 0,510]), jadi batas 0,002
+   dinyatakan bersyarat pada daftar split dan judul serta abstrak memuat syarat itu. Sekunder deskriptif: kosinus segmen
+   dilihat − tidak dilihat 0,0020 [0,0017; 0,0023], satu-satunya jejak keanggotaan, dilaporkan tanpa mengubah M1. Celah
+   LVH subset di luar kohort milik ECG-FM sendiri (pretrained 0,030 [0,005; 0,059], ECG-JEPA 0,004 [−0,011; 0,022]).
+
+17. **Kontrol positif swaawas dengan anggota buatan (dicatat 26 Nov 2026, sesudah telaah internal 9, sebelum kodenya ditulis,
+   sebelum model apa pun dilatih lanjut, dan sebelum embedding atau skor baru dihitung).** Pilihan penulis
+   "Continued-pretraining control". Alasan: konsensus telaah internal 9 — uji kehilangan M1 tidak pernah diuji pada anggota yang
+   diketahui, jadi kegagalannya tidak memisahkan "daftar salah" dari "uji lemah" (devil's advocate X2, domain D2,
+   methods M1); satu-satunya kontrol positif adalah paparan label pada tugas di plafon, bukan paparan swaawas pada
+   tugas berruang (editor X2, methods M8, domain D4, devil's advocate X5). Yang sudah dilihat: semua Hasil 1–18;
+   konfigurasi checkpoint pretrained (kriteria `wav2vec2_with_cmsc`, bobot suku tambahan [0,1; 10], temp 0,1,
+   perturbasi `random_leads_masking` p 1,0 dengan peluang per sadapan 0,5; Adam lr 5·10⁻⁵ tetap, betas (0,9; 0,98),
+   eps 10⁻⁶, peluruhan bobot 0,01; batch 171 × update_freq 2; iterator di epoch 241, 167.280 pembaruan); laju latih pada
+   tensor acak di GPU ini (±30 segmen/detik batch 16 fp32, 3,8 GiB; autocast fp16 gagal di `apply_mask`
+   fairseq-signals). Belum ada model terlatih lanjut, embedding, prediksi, atau skor baru.
+   (a) **Penugasan acak per pasien:** unit = 22.058 pasien tidak dilihat langkah 16 (`valid` ∪ `test`). Disuntik =
+   paruh `paruh_b` langkah 16 (`pilih_unit` + `buat_data` di `statistik_keanggotaan.py`, benih 20261120; 11.029
+   pasien); ditahan = sisanya. Paruh ini sudah dipakai sebagai plasebo langkah 16 sehingga garis dasar sebelum
+   suntikan tercatat (D kehilangan −0,0009 [−0,0101; 0,0083], Hasil 18); pembagiannya acak dan tidak diubah.
+   (b) **Latih lanjut (paparan yang diketahui):** mulai dari `mimic_iv_ecg_physionet_pretrained.pt`. Data latih = semua
+   rekaman replikasi (tabel unit langkah 15) milik pasien disuntik, ditambah rekaman `train` replikasi sebanyak yang
+   sama yang diundi acak (benih 20261120) sebagai putar-ulang, agar model tidak hanya melihat rekaman suntikan.
+   Pra-proses sama dengan embedding (12 sadapan, standardisasi per sadapan atas 10 s, dua segmen 5 s). Objektif =
+   kriteria checkpoint sendiri: InfoNCE wav2vec 2.0 + suku tambahan berbobot [0,1; 10] + CMSC dengan pasangan positif =
+   dua segmen satu rekaman; perturbasi penyamaran sadapan acak dari konfigurasi tugas checkpoint. Pengoptimal seperti
+   checkpoint (Adam, lr tetap 5·10⁻⁵, betas, eps, peluruhan bobot). Batch efektif 342 segmen (171 rekaman × 2 segmen)
+   lewat akumulasi gradien dari batch mikro 16 rekaman; negatif CMSC berasal dari batch mikro (penyimpangan dari 171
+   karena VRAM GPU 8 GB, dicatat di naskah). fp32. Urutan acak per epoch (benih 20261120). **Empat epoch.**
+   Checkpoint disimpan sesudah epoch 1 (dosis rendah, ECG-FM+1) dan epoch 4 (dosis utama, ECG-FM+4), di luar repo.
+   Bila suatu suku kriteria atau perturbasi tidak dapat dipanggil dari fairseq-signals, penyimpangan itu ditulis di
+   rencana ini sebelum latih dimulai, bukan sesudah hasil.
+   (c) **Bacaan:** embedding mode eval dengan ECG-FM+1 dan ECG-FM+4 untuk semua 83.385 rekaman `valid` ∪ `test`
+   replikasi, pra-proses langkah 15; ECG-FM pretrained asli dan ECG-JEPA dari singgahan langkah 15. Untuk keempat model,
+   probe L2 identik langkah 15 dipasang ulang pada 83.385 unit ini saja (5 lipatan per pasien, benih 20261120; C dari
+   {10⁻³, 10⁻², 10⁻¹, 1} lewat 3 lipatan dalam per pasien pada bagian latih lipatan 1, per tugas dan model); lima
+   pernyataan langkah 15. Celah g(m, t) = AUROC(disuntik) − AUROC(ditahan) dari prediksi di luar lipatan. Efek paparan
+   E(t) = g(ECG-FM+4, t) − g(ECG-FM asli, t): model yang sama sebelum suntikan menjadi pembanding. Kehilangan: skor
+   langkah 16b (K = 4, topeng dan negatif sama, benih dipasang sesudah model dimuat) dengan ECG-FM+4 pada satu rekaman
+   per pasien undian langkah 16; Dₛ = rerata ditahan − rerata disuntik. Bootstrap bergugus pasien 2.000 ulangan, benih
+   20261120, semua bacaan pada ulangan yang sama.
+   (d) **Aturan (ditetapkan sekarang):**
+   N0 — kontrol negatif pengacakan: celah ECG-JEPA, g(ECG-JEPA, ·), pada LVH dan pada rerata lima pernyataan berselang
+   memuat nol. Bila tidak, ketidakseimbangan dilaporkan dan K1, P1, P2 dibaca dengan catatan itu.
+   K1 — kepekaan uji kehilangan: batas bawah 95 % Dₛ(ECG-FM+4) > 0. Lolos: uji kehilangan langkah 16 mampu
+   mendeteksi keanggotaan yang diketahui pada dosis ini; Dₛ dibandingkan dengan batas atas D langkah 16 (0,0122) secara
+   deskriptif, dan naskah tidak menyimpulkan daftar salah, karena dosis ini lebih baru tetapi jauh lebih sedikit
+   lintasan (4 lawan ±240 epoch). Gagal: uji kehilangan tidak peka bahkan pada keanggotaan yang diketahui dan baru, dan
+   naskah menyatakan kegagalan M1 tidak informatif tentang daftar.
+   P1 — kontrol positif swaawas pada tugas berruang: batas bawah 95 % E(LVH) > 0. Lolos: desain mendeteksi paparan
+   swaawas pada AUROC LVH; E(LVH) dibandingkan deskriptif dengan celah LVH luar kohort (0,030). Gagal: paparan swaawas
+   dosis ini tidak menggeser AUROC LVH secara terdeteksi, dan naskah mengatakannya.
+   P2 — tugas di plafon: batas bawah 95 % E(rerata empat tugas berlabel) > 0; batas atasnya dilaporkan sebagai besar
+   efek swaawas langsung di plafon.
+   Tidak ada koreksi multiplisitas: K1, P1, P2 adalah tiga gerbang kalibrasi terpisah, masing-masing dilaporkan.
+   (e) **Sekunder deskriptif (tanpa vonis):** semua bacaan untuk ECG-FM+1; E per tugas; E dengan ECG-JEPA sebagai
+   pembanding (DiD); AUROC keanggotaan dari −kehilangan; kosinus segmen ECG-FM+4 disuntik − ditahan; Dₛ ECG-FM+1;
+   kehilangan latih per epoch (agregat).
+   (f) **Proses:** kode di folder baru `glukosa_kontrol/`, dikomit dan diuji asap pada data sintetis sebelum latih;
+   latih, embedding, dan skor dijalankan sekali; galat teknis diperbaiki dan dicatat di berkas hasil; stdout hanya
+   agregat (hitungan 1–10 disamarkan); checkpoint, embedding, prediksi, dan skor di `data/` di luar repo (ruang
+   disk ±24 GB, jadi tidak ada singgahan gelombang penuh). Pra-registrasi publik (versi Zenodo baru) hanya atas
+   konfirmasi penulis, sebelum latih dimulai. Hasil → `Hasil_Glukosa_19.md`.
+   **Catatan proses 26 Nov 2026 (sebelum kode ditulis, sesudah membaca kode fairseq-signals dan isi checkpoint; belum
+   ada latih):** (1) 171 tidak habis dibagi 16, jadi batch mikro menjadi 9 rekaman (18 segmen) × 19 akumulasi = 171
+   rekaman / 342 segmen per pembaruan; negatif CMSC dari 9 rekaman. (2) Checkpoint rilis memuat `last_optimizer_state`
+   Adam; momen Adam dilanjutkan dari situ (lebih setia daripada Adam baru), langkah peluruhan bobot terpisah seperti
+   Adam fairseq. (3) Suhu Gumbel kuantisator dilanjutkan dari pembaruan 167.280 (`set_num_updates`; 0,866, sama dengan
+   log latih checkpoint). (4) Gradien dibagi jumlah langkah bertopeng seluruh batch mikro dalam satu pembaruan, seperti
+   pelatih fairseq. (5) Penyamaran sadapan per segmen memakai `RandomLeadsMask` fairseq-signals (numpy); pasangan CMSC
+   = `idx` rekaman, sama dengan `CMSCECGDataset`; `dependency` hanya dipakai perturbasi 3KG, jadi tidak berlaku. (6)
+   Checkpoint asli fp32 (`fp16` False), latih lanjut juga fp32. (7) Benih torch, numpy, dan random 20261120 dipasang
+   sekali sesudah model dimuat; urutan tiap epoch dari satu generator numpy benih 20261120. (8) Sisa rekaman di akhir
+   epoch menjadi satu pembaruan terakhir yang lebih kecil, seperti batch terakhir fairseq.
+   **Catatan proses kode (26 Nov 2026, sebelum latih pada data nyata):** `glukosa_kontrol/` berisi
+   `penugasan_kontrol.py` (paruh disuntik, rekaman latih, unit bacaan), `pelatih_lanjut.py` (model, kriteria, Adam
+   lanjutan, langkah mikro, simpan/lanjut beserta keadaan acak), `jalankan_latih.py` (epoch, akumulasi, bobot dosis),
+   `jalankan_bacaan.py` (embedding dan skor kehilangan per dosis), `statistik_kontrol.py` (probe, celah, E, Dₛ,
+   bootstrap bersama), dan `uji_kontrol.py` (tabel dan vonis N0, K1, P1, P2). Kriteria fairseq-signals butuh konfigurasi
+   OmegaConf dan kunci `id` di sampel (diisi indeks rekaman, seperti collater). Diuji asap pada ZIP WFDB sintetis dari uji
+   asap langkah 16 (466 rekaman acak, bukan data MIMIC) dengan label dan embedding acak: latih empat epoch berjalan;
+   jalan yang dihentikan sesudah epoch 2 lalu dilanjutkan memberi kehilangan epoch 3 dan 4 identik dengan jalan utuh;
+   bacaan dan vonis berjalan.

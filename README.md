@@ -33,13 +33,28 @@ looked at; both are reproduced in `plan/Artikel_Glukosa_Rencana_petikan.md`:
 - **Confirmatory replication** (plan step 15, 23 November 2026): the same design on the 416,503 recordings in ECG-FM's
   split list that are not in the glucose cohort, with two rules fixed in advance — R1, the lower 95 % bound of the
   fine-tuned model's mean difference-in-differences over the four labelled statements is above 0; R2, the upper 95 %
-  bound of the pretrained model's is below 0.002 AUROC. **Version 1.1.0 is released before the labels of these
-  recordings were computed and before any of their embeddings was built**; `glukosa_replikasi/` holds the scripts that
-  will be run once, and their output will be added as a note in a later version.
+  bound of the pretrained model's is below 0.002 AUROC. Version 1.1.0 (doi 10.5281/zenodo.24452624) was released
+  before the labels of these recordings were computed and before any of their embeddings was built. The replication
+  was run once; both rules passed (`notes/Hasil_Glukosa_17.md`).
+- **Direct membership check** (plan step 16, 26 November 2026, recorded in a dated private commit before its code was
+  written and before any loss was scored): ECG-FM's own wav2vec 2.0 contrastive loss on one recording per patient,
+  22,058 `valid` ∪ `test` patients against as many `train` patients, rule M1 (lower 95 % bound of unseen − seen > 0)
+  with a random-halves negative control. Run once; the negative control passed and M1 was not met
+  (`notes/Hasil_Glukosa_18.md`).
+- **Continued-pretraining positive control** (plan step 17, 26 November 2026): ECG-FM's self-supervised pretraining
+  is continued for four epochs, with its own criterion and optimizer state, on all recordings of a random half of the
+  22,058 unseen patients (the negative-control halves of step 16) plus as many `train` recordings, creating known
+  members. Rules fixed in advance: N0, the comparator's seen − unseen gap between the halves contains 0; K1, the lower
+  95 % bound of the loss difference (held out − injected) of the continued model is above 0; P1, the lower 95 % bound
+  of the injected − held-out AUROC gap of the continued model minus that of the original model is above 0 for LVH; P2,
+  the same for the mean of the four labelled statements. **Version 1.2.0 is released before any training, embedding or
+  score of this step**; `glukosa_kontrol/` holds the scripts that will be run once, and their output will be added as
+  a note in a later version.
 
 Analyses recorded after the results they respond to (`Hasil_Glukosa_9.md`, `Hasil_Glukosa_10.md`, `Hasil_Glukosa_12.md`,
-`Hasil_Glukosa_14.md` to `Hasil_Glukosa_16.md`, plan steps 10, 12, 13 and 14, and the ICU analysis in
-`Hasil_Glukosa_2.md`) are marked as post hoc and descriptive in their notes.
+`Hasil_Glukosa_14.md` to `Hasil_Glukosa_16.md`, plan steps 10, 12, 13 and 14, the per-model LVH gaps of step 16f in
+`Hasil_Glukosa_18.md`, and the ICU analysis in `Hasil_Glukosa_2.md`) are marked as post hoc and descriptive in their
+notes.
 
 ## Requirements
 
@@ -85,8 +100,14 @@ on GPU is not bit-reproducible (VALIDATION AUROC moved by up to 0.015 between ru
   `jalankan_kontras_langsung.py`, `jalankan_rasio_label.py`; `Hasil_14` to `Hasil_16`).
 - `glukosa_replikasi/` — the confirmatory replication: unit table and labels (`siapkan_replikasi.py`), then, after the
   three embeddings are built with `glukosa_m3/bangun_embedding.py --singgahan <replication folder>`, the analysis
-  (`jalankan_replikasi.py`, with `prediksi_replikasi.py` and `statistik_replikasi.py`). Not yet run in 1.1.0.
-- `notes/` — the working notes `Hasil_Glukosa_0.md` to `Hasil_Glukosa_16.md`, in which every number of the manuscript
+  (`jalankan_replikasi.py`, with `prediksi_replikasi.py` and `statistik_replikasi.py`; `Hasil_17`); the membership
+  check (`uji_keanggotaan.py`, with `skor_keanggotaan.py`, `baca_keanggotaan.py`, `hitung_keanggotaan.py` and
+  `statistik_keanggotaan.py`) and the per-model LVH gaps (`celah_lvh.py`; both `Hasil_18`); the figure of the
+  manuscript (`gambar_replikasi.py`).
+- `glukosa_kontrol/` — the continued-pretraining positive control: training (`jalankan_latih.py`, with
+  `penugasan_kontrol.py` and `pelatih_lanjut.py`), readings with the continued weights (`jalankan_bacaan.py`), and the
+  verdicts (`uji_kontrol.py`, with `statistik_kontrol.py`). Not yet run in 1.2.0.
+- `notes/` — the working notes `Hasil_Glukosa_0.md` to `Hasil_Glukosa_18.md`, in which every number of the manuscript
   was recorded with the copied script output.
 - `plan/` — the excerpt of the analysis plan described above.
 
@@ -95,7 +116,8 @@ Comments, notes and the plan are in Indonesian. Glossary: *hipo* hypoglycemia, *
 *bergugus pasien* patient-clustered, *singgahan* cache, *gelombang* waveform, *sadapan* lead, *penanam* embedder,
 *model fondasi* foundation model, *paparan* exposure, *dilihat* / *tidak dilihat* seen / unseen in pretraining,
 *kepekaan* sensitivity analysis, *pernyataan* machine statement, *lipatan* fold, *perluasan* extension, *replikasi*
-replication, *kontrol positif* positive control, *swaawas* self-supervised, *subkelompok* subgroup, *kalibrasi ulang* recalibration, *ukuran mesin* machine
+replication, *kontrol positif* positive control, *swaawas* self-supervised, *keanggotaan* membership, *kehilangan*
+loss, *latih lanjut* continued pretraining, *disuntik* / *ditahan* injected / held out, *subkelompok* subgroup, *kalibrasi ulang* recalibration, *ukuran mesin* machine
 measurements, *rawat* care, *keputusan penulis* author decision, *telaah internal* internal review. Notes refer to an
 earlier study of the same authors (the "OMI" study) whose CNN recipe and probe grid were reused; its code is public at
 https://github.com/agustinohalim/omi-parent-label-baseline. Notes also refer to planning files that are not part of
