@@ -1,6 +1,6 @@
 # Analysis plan (excerpt)
 
-Section C2 (dataset facts that shaped the design) and work steps 6, 7 and 9–17 of section F of the authors' working
+Section C2 (dataset facts that shaped the design) and work steps 6, 7 and 9–18 of section F of the authors' working
 plan, in Indonesian. Step 7 is the TEST protocol, recorded before the TEST split was opened; step 9 is the pretraining
 contamination protocol, recorded before any ECG-FM embedding was computed; step 11 extends it to machine-statement
 tasks and a fine-tuned positive control, recorded before those were scored. Steps 10, 12, 13 and 14 were recorded
@@ -9,7 +9,9 @@ replication on recordings outside the glucose cohort; version 1.1.0 is released 
 committed and before its labels were computed or any embedding of those recordings was built. Step 16 is the direct
 membership check, recorded before its code was written and before any loss was scored. Step 17 is the
 continued-pretraining positive control; version 1.2.0 is released after step 17 and its code were committed and before
-any training, embedding or score of that step. Each step was recorded
+any training, embedding or score of that step. Step 18 is the calibrated audit (paired manipulation check and a
+segment-agreement placebo on the clean models); version 1.3.0 is released after step 18 and its code were committed and
+before any of its statistics was computed. Each step was recorded
 in a dated commit of the authors' private working repository; the bold **Hasil N** paragraphs inside a step were
 appended after the corresponding run. "Telaah internal N" is the authors' N-th internal pre-submission review. Sections
 on journal choice, manuscript outline and internal review are omitted. File names `Hasil_Glukosa_N.md` refer to
@@ -432,3 +434,71 @@ on journal choice, manuscript outline and internal review are omitted. File name
    asap langkah 16 (466 rekaman acak, bukan data MIMIC) dengan label dan embedding acak: latih empat epoch berjalan;
    jalan yang dihentikan sesudah epoch 2 lalu dilanjutkan memberi kehilangan epoch 3 dan 4 identik dengan jalan utuh;
    bacaan dan vonis berjalan.
+   **Pra-registrasi publik:** atas konfirmasi penulis, rilis GitHub v1.2.0 (komit publik 6f2991c; protokol langkah 16–17,
+   kode `glukosa_kontrol/`, Hasil 17–18) diarsipkan Zenodo sebagai versi 1.2.0, DOI 10.5281/zenodo.24549186,
+   26 Nov 2026 04:22 UTC — sebelum latih lanjut, embedding, atau skor langkah 17 apa pun.
+   **Hasil 19 (27 Nov 2026, `Hasil_Glukosa_19.md`):** N0 LOLOS (celah ECG-JEPA LVH −0,001 [−0,010; 0,007], rerata lima
+   −0,001 [−0,004; 0,001]). **K1 GAGAL:** Dₛ(ECG-FM+4) 0,0016 [−0,0083; 0,0113], AUROC keanggotaan 0,4999; uji kehilangan
+   buta bahkan pada anggota yang diketahui, jadi kegagalan M1 tidak informatif tentang daftar split. **P1 GAGAL:**
+   E(LVH) −0,004 [−0,008; −0,001] (arah negatif, deskriptif). **P2 GAGAL:** E(rerata empat berlabel) 0,001 [−0,000;
+   0,001]; batas atas 0,001 dilaporkan sebagai efek swaawas langsung di plafon pada dosis 4 epoch (lawan ±240 epoch
+   pra-latih asli). Jalan pertama dihentikan pengawas RAM sebelum checkpoint apa pun dan tidak dipakai; jalan yang dipakai
+   dimulai ulang dari awal dengan `--pekerja 4` (tidak mengubah urutan atau undian). Penulis 27 Nov memilih membingkai
+   ulang naskah sebagai audit keterdeteksian kontaminasi (pilihan "A"), lalu telaah internal 10.
+   **Telaah internal 10 (27 Nov):** NOT READY, Reject in current form; signifikansi 2 dari
+   kelima peran; editor desk reject. Kritis konsensus: kesepakatan segmen memisahkan anggota daftar (0,0020) dan anggota
+   suntikan (0,0004) tetapi plasebonya pada model bersih belum dijalankan; "tidak dapat diaudit" bertumpu pada satu uji
+   kehilangan tak berpasangan; tidak ada cek manipulasi suntikan. Penulis 27 Nov memilih pra-registrasi langkah 18.
+18. **Audit terkalibrasi: cek manipulasi berpasangan dan plasebo kesesuaian segmen (dicatat 27 Nov 2026, sesudah panel
+   10, sebelum kodenya ditulis dan sebelum statistik apa pun di bawah dihitung).** Alasan: telaah internal 10 (methods X1–X4,
+   devil's advocate X1–X4, domain X1–X3, editor X1–X2). Yang sudah dilihat: semua Hasil 1–19; dari kesepakatan segmen
+   hanya selisih rerata ECG-FM dilihat − tidak dilihat (0,0020 [0,0017; 0,0023], Hasil 18) dan ECG-FM+4 disuntik −
+   ditahan (0,0004 [0,0000; 0,0009], Hasil 19); dari kehilangan hanya Dₛ tak berpasangan per model. Belum dihitung:
+   selisih berpasangan per pasien antara checkpoint, simpangan baku kesesuaian per kelompok, dan kesesuaian segmen model
+   bersih apa pun. Skor per rekaman di `data/replikasi` dan `data/kontrol` tetap tidak dibuka
+   di sesi asisten; skrip mencetak agregat saja.
+   (a) **Cek manipulasi dan uji kehilangan berpasangan (skor tersimpan, tanpa GPU):** unit = 22.058 pasien tidak
+   dilihat langkah 16, satu rekaman per pasien, paruh disuntik/ditahan langkah 17. Per pasien Δℓ = kehilangan
+   ECG-FM+4 − kehilangan ECG-FM asli pada rekaman yang sama (skor langkah 16 dan 17; undian topeng berbeda karena urutan
+   penilaian berbeda, jadi derau topeng masuk selang). Dₚ = rerata Δℓ ditahan − rerata Δℓ disuntik. **K2:** batas
+   bawah 95 % Dₚ > 0 → latih lanjut meninggalkan jejak pada kehilangan pasien disuntik, dan uji yang dikalibrasi pada
+   checkpoint sebelum suntikan mendeteksi anggota yang diketahui. Gagal → kehilangan tidak mencatat suntikan sama
+   sekali; P1, P2, dan K1 dibaca sebagai bacaan atas paparan yang tidak terlihat pada kehilangan, dan naskah tidak
+   menyebut uji kehilangan "buta terhadap anggota yang diketahui" tanpa syarat itu. Kesesuaian segmen berpasangan: Δc =
+   kosinus ECG-FM+4 − kosinus ECG-FM asli; Cₚ = rerata Δc disuntik − rerata Δc ditahan. **C2:** batas bawah 95 %
+   Cₚ > 0. Deskriptif: AUROC keanggotaan dari −Δℓ dan dari Δc, Dₚ dan Cₚ untuk ECG-FM+1, dan rerata kehilangan latih
+   tidak dipisah ulang (log latih tidak memisah suntikan dan putar-ulang).
+   (b) **Plasebo kesesuaian segmen pada model bersih (GPU):** unit = 44.116 rekaman langkah 16 (22.058 dilihat, 22.058
+   tidak dilihat), satu per pasien, urutan `baris_gelombang`. ECGFounder: pra-proses resmi atas 10 s penuh, lalu dua
+   paruh 2.500 sampel masing-masing masuk Net1D terpisah; kesesuaian = kosinus dua `deep_features` 1.024 dimensi.
+   ECG-JEPA: masukan resmi 10 s tidak dapat dipotong (posisi tetap 50 tambalan), jadi satu forward pass, lalu
+   kesesuaian = kosinus rerata token tambalan 1–25 lawan 26–50 atas delapan sadapan. ECG-FM tidak dihitung ulang (skor
+   langkah 16). Per model m, SMD_m = (rerata dilihat − rerata tidak dilihat) / simpangan baku gabungan kedua kelompok
+   pada sampel penuh (penyebut tetap, bukan per ulangan). Δ_c = SMD_ECG-FM − SMD_c untuk c ∈ {ECG-JEPA, ECGFounder}.
+   **M2:** batas bawah 95 % Δ_c > 0 untuk kedua model bersih → daftar didukung: ECG-FM menunjukkan selisih kesesuaian
+   segmen dilihat − tidak dilihat yang tidak ditunjukkan model yang tidak pernah melihat MIMIC-IV-ECG. Gagal untuk salah
+   satu → daftar tetap tidak terverifikasi. Deskriptif: SMD_c tiap model bersih dengan selangnya (plasebo mentah),
+   SMD ECG-FM+4 disuntik − ditahan dan SMD Δc berpasangan (perbandingan dosis), ECG-FM dengan `valid` dan `test`
+   terpisah, serta SMD laju jantung dan durasi QRS dari `machine_measurements` antara kelompok bila sudah ada di tabel
+   unit replikasi.
+   (c) **Statistik:** bootstrap 2.000 ulangan atas pasien (satu unit = satu pasien), benih 20261120, selang kuantil
+   95 %, semua statistik (a) dan (b) pada ulangan bersama masing-masing populasinya. Tanpa koreksi multiplisitas: K2,
+   C2, M2 gerbang terpisah.
+   (d) **Akibat untuk naskah, ditetapkan sekarang:** M2 lolos → judul dan abstrak menyatakan daftar didukung oleh jejak
+   khas ECG-FM dan batas 0,002 dibaca sebagai batas efek keanggotaan dengan syarat jejak itu memang keanggotaan; klaim
+   "tidak dapat diaudit" dicabut. M2 gagal → klaim "tidak dapat diaudit dari artefak rilis" dipertahankan tetapi
+   disempitkan ke uji yang dicoba (kehilangan tak berpasangan, kehilangan berpasangan bila K2 gagal, kesesuaian
+   segmen). K2 menentukan apakah suntikan dibaca sebagai paparan yang terekam (lolos) atau dosis yang tidak terlihat
+   (gagal). Uji gabungan semua rekaman per pasien ala inferensi dataset tidak dijalankan (butuh menilai ±400 ribu
+   rekaman tambahan) dan disebut sebagai batasan.
+   (e) **Proses:** kode di folder baru `glukosa_audit/`, dikomit dan diuji asap pada data sintetis sebelum jalan pada
+   data nyata; dijalankan sekali di jendela cmd terpisah; hasil ke `Hasil_Glukosa_20.md`.
+   **Catatan proses kode (27 Nov 2026, sebelum statistik apa pun):** `glukosa_audit/` berisi `kesesuaian_bersih.py`
+   (pembaca dua model, token paruh ECG-JEPA, dua paruh ECGFounder), `jalankan_kesesuaian.py` (kosinus 18b per rekaman),
+   `statistik_audit.py` (populasi berpasangan dan plasebo, Dₚ, Cₚ, SMD penyebut tetap, Δ_c) dan `uji_audit.py` (tabel
+   dan vonis K2, C2, M2); komit 6625c48. Diuji asap pada ZIP WFDB sintetis dan skor acak langkah 17 (154 rekaman acak,
+   bukan data MIMIC; kovariat acak ditambahkan karena tabel unit sintetis tidak memuatnya): rantai penuh berjalan, dan
+   simpanan yang sudah ada tidak dihitung ulang. Kosinus 18b pada data nyata dihitung 27 Nov 14:06–15:09 di jendela cmd
+   terpisah (terbaca 44.116 dari 44.116; GPU sempat dibatasi daya saat laptop memakai baterai, tanpa akibat pada
+   keluaran). Simpanan itu tidak dibuka dan `uji_audit.py` belum dijalankan. Penulis memilih pra-registrasi publik
+   (rilis 1.3.0) sebelum statistik apa pun dihitung.

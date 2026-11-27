@@ -1,11 +1,11 @@
 {
   "title": "ecg-glucose-benchmark: analysis code, pre-specified protocols and aggregate results for detecting hypo- and hyperglycemia from inpatient 12-lead ECGs",
-  "description": "<p>Analysis code, aggregate results and analysis-plan excerpt for a study of hypoglycemia and severe hyperglycemia detection from inpatient 12-lead ECGs in MIMIC-IV-Ext-ECG-Glucose v1.0.0, with waveforms from MIMIC-IV-ECG v1.0, and of pretraining contamination of ECG foundation models. Models: demographics, ECG machine measurements, a 1-D CNN trained from scratch, and frozen ECG foundation models with an L2 logistic probe (ECGFounder and ECG-JEPA, pretrained without MIMIC-IV-ECG; ECG-FM pretrained and fine-tuned, both trained on part of MIMIC-IV-ECG).</p><p>Version 1.1.0 pre-registered a confirmatory replication (plan step 15) on 416,503 MIMIC-IV-ECG recordings outside the glucose cohort; it was run once and both rules passed (note 17). Version 1.2.0 adds that result, a direct pretraining-membership check (plan step 16: ECG-FM's own contrastive loss on 22,058 unseen against 22,058 seen patients; recorded in a dated private commit before its code; rule M1 not met, note 18), and pre-registers a continued-pretraining positive control (plan step 17): ECG-FM's self-supervised pretraining is continued for four epochs on all recordings of a random half of the unseen patients, creating known members. Rules: the loss check detects the injected half (K1); the injected-minus-held-out AUROC gap of the continued model exceeds the original model's on LVH (P1) and on the mean of four labelled statements (P2); the comparator's gap contains zero (N0). Protocol and code (glukosa_kontrol/) are released before any training, embedding or score of this step.</p><p>No data from the credentialed dataset are included: the scripts run locally on the PhysioNet releases and print aggregate tables only, with counts between 1 and 10 masked. Code: MIT. Notes and plan excerpt: CC BY 4.0.</p>",
+  "description": "<p>Analysis code, aggregate results and analysis-plan excerpt for a study of hypoglycemia and severe hyperglycemia detection from inpatient 12-lead ECGs in MIMIC-IV-Ext-ECG-Glucose v1.0.0, with waveforms from MIMIC-IV-ECG v1.0, and of pretraining contamination of ECG foundation models. Models: demographics, ECG machine measurements, a 1-D CNN trained from scratch, and frozen ECG foundation models with an L2 logistic probe (ECGFounder and ECG-JEPA, pretrained without MIMIC-IV-ECG; ECG-FM pretrained and fine-tuned, both trained on part of MIMIC-IV-ECG).</p><p>Version 1.1.0 pre-registered a confirmatory replication (plan step 15) on 416,503 MIMIC-IV-ECG recordings outside the glucose cohort; it was run once and both rules passed (note 17). Version 1.2.0 adds that result, a direct pretraining-membership check (plan step 16: ECG-FM's own contrastive loss on 22,058 unseen against 22,058 seen patients; recorded in a dated private commit before its code; rule M1 not met, note 18), and pre-registers a continued-pretraining positive control (plan step 17): ECG-FM's self-supervised pretraining is continued for four epochs on all recordings of a random half of the unseen patients, creating known members. Rules: the loss check detects the injected half (K1); the injected-minus-held-out AUROC gap of the continued model exceeds the original model's on LVH (P1) and on the mean of four labelled statements (P2); the comparator's gap contains zero (N0). Version 1.3.0 adds that result (note 19: N0 passed; K1, P1 and P2 not met) and pre-registers a calibrated audit (plan step 18): (a) a paired manipulation check on the unseen patients, comparing the continued and the original model on the same recording, with rules K2 (loss) and C2 (segment agreement); (b) a segment-agreement placebo on ECGFounder and ECG-JEPA, which never saw MIMIC-IV-ECG, with rule M2: the seen-minus-unseen standardised difference of ECG-FM exceeds that of each clean model. Protocol and code (glukosa_audit/) are released before any statistic of this step is computed.</p><p>No data from the credentialed dataset are included: the scripts run locally on the PhysioNet releases and print aggregate tables only, with counts between 1 and 10 masked. Code: MIT. Notes and plan excerpt: CC BY 4.0.</p>",
   "upload_type": "software",
   "license": "MIT",
   "access_right": "open",
   "language": "eng",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "creators": [
     {
       "name": "Halim, Agustino",
@@ -23,7 +23,8 @@
     "replication",
     "pre-registration",
     "membership inference",
-    "positive control"
+    "positive control",
+    "placebo test"
   ],
   "related_identifiers": [
     {

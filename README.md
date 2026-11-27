@@ -47,9 +47,23 @@ looked at; both are reproduced in `plan/Artikel_Glukosa_Rencana_petikan.md`:
   members. Rules fixed in advance: N0, the comparator's seen − unseen gap between the halves contains 0; K1, the lower
   95 % bound of the loss difference (held out − injected) of the continued model is above 0; P1, the lower 95 % bound
   of the injected − held-out AUROC gap of the continued model minus that of the original model is above 0 for LVH; P2,
-  the same for the mean of the four labelled statements. **Version 1.2.0 is released before any training, embedding or
-  score of this step**; `glukosa_kontrol/` holds the scripts that will be run once, and their output will be added as
-  a note in a later version.
+  the same for the mean of the four labelled statements. Version 1.2.0 (doi 10.5281/zenodo.24549186) was released
+  before any training, embedding or score of this step. Run once: N0 passed; K1, P1 and P2 were not met
+  (`notes/Hasil_Glukosa_19.md`). The note also records a deviation found after the run: continued pretraining used 171
+  recordings per update against 1,026 in the original pretraining.
+- **Calibrated audit** (plan step 18, 27 November 2026, recorded in a dated private commit before its code was written
+  and before any of its statistics was computed): (a) a paired manipulation check on the 22,058 unseen patients, using
+  the per-recording scores already stored by steps 16 and 17 — per patient, the loss and segment agreement of the
+  continued model minus those of the original model on the same recording; rule K2, the lower 95 % bound of the mean
+  loss change of held-out minus injected patients is above 0; rule C2, the lower 95 % bound of the mean
+  segment-agreement change of injected minus held-out patients is above 0; (b) a segment-agreement placebo on the two
+  models that never saw MIMIC-IV-ECG, on the 44,116 recordings of step 16 (ECGFounder: cosine of the embeddings of the
+  two 5 s halves; ECG-JEPA: cosine of the mean tokens of patches 1–25 and 26–50); rule M2, the lower 95 % bound of
+  the seen − unseen standardised mean difference of ECG-FM minus that of each clean model is above 0, for both. The
+  consequences of each outcome for the manuscript are fixed in the plan (step 18d). **Version 1.3.0 is released before
+  any statistic of this step is computed**; the per-recording cosines of the clean models were computed after the code
+  was committed and have not been read. `glukosa_audit/` holds the scripts; the verdict script will be run once and its
+  output added as a note in a later version.
 
 Analyses recorded after the results they respond to (`Hasil_Glukosa_9.md`, `Hasil_Glukosa_10.md`, `Hasil_Glukosa_12.md`,
 `Hasil_Glukosa_14.md` to `Hasil_Glukosa_16.md`, plan steps 10, 12, 13 and 14, the per-model LVH gaps of step 16f in
@@ -106,8 +120,10 @@ on GPU is not bit-reproducible (VALIDATION AUROC moved by up to 0.015 between ru
   manuscript (`gambar_replikasi.py`).
 - `glukosa_kontrol/` — the continued-pretraining positive control: training (`jalankan_latih.py`, with
   `penugasan_kontrol.py` and `pelatih_lanjut.py`), readings with the continued weights (`jalankan_bacaan.py`), and the
-  verdicts (`uji_kontrol.py`, with `statistik_kontrol.py`). Not yet run in 1.2.0.
-- `notes/` — the working notes `Hasil_Glukosa_0.md` to `Hasil_Glukosa_18.md`, in which every number of the manuscript
+  verdicts (`uji_kontrol.py`, with `statistik_kontrol.py`; `Hasil_19`).
+- `glukosa_audit/` — the calibrated audit: segment agreement of the clean models (`jalankan_kesesuaian.py`, with
+  `kesesuaian_bersih.py`), then the verdicts (`uji_audit.py`, with `statistik_audit.py`). Not yet run in 1.3.0.
+- `notes/` — the working notes `Hasil_Glukosa_0.md` to `Hasil_Glukosa_19.md`, in which every number of the manuscript
   was recorded with the copied script output.
 - `plan/` — the excerpt of the analysis plan described above.
 
@@ -117,7 +133,8 @@ Comments, notes and the plan are in Indonesian. Glossary: *hipo* hypoglycemia, *
 *model fondasi* foundation model, *paparan* exposure, *dilihat* / *tidak dilihat* seen / unseen in pretraining,
 *kepekaan* sensitivity analysis, *pernyataan* machine statement, *lipatan* fold, *perluasan* extension, *replikasi*
 replication, *kontrol positif* positive control, *swaawas* self-supervised, *keanggotaan* membership, *kehilangan*
-loss, *latih lanjut* continued pretraining, *disuntik* / *ditahan* injected / held out, *subkelompok* subgroup, *kalibrasi ulang* recalibration, *ukuran mesin* machine
+loss, *latih lanjut* continued pretraining, *disuntik* / *ditahan* injected / held out, *kesesuaian segmen* segment
+agreement, *model bersih* clean model, *plasebo* placebo, *berpasangan* paired, *subkelompok* subgroup, *kalibrasi ulang* recalibration, *ukuran mesin* machine
 measurements, *rawat* care, *keputusan penulis* author decision, *telaah internal* internal review. Notes refer to an
 earlier study of the same authors (the "OMI" study) whose CNN recipe and probe grid were reused; its code is public at
 https://github.com/agustinohalim/omi-parent-label-baseline. Notes also refer to planning files that are not part of
