@@ -8,10 +8,11 @@ abstract: >-
   pretraining contamination, its extension with a fine-tuned positive control, and a
   pre-registered confirmatory replication on recordings outside the cohort, a direct membership check, and a
   pre-registered continued-pretraining positive control, and a pre-registered calibrated audit with a placebo on
-  clean models. No data from the credentialed dataset are included.
+  clean models, and a pre-registered fresh-data placebo with dataset inference. No data from the credentialed
+  dataset are included.
 type: software
 license: MIT
-version: 1.3.0
+version: 1.4.0
 date-released: "2026-11-27"
 authors:
   - given-names: Agustino

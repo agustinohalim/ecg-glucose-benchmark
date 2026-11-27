@@ -1,6 +1,6 @@
 # Analysis plan (excerpt)
 
-Section C2 (dataset facts that shaped the design) and work steps 6, 7 and 9–18 of section F of the authors' working
+Section C2 (dataset facts that shaped the design) and work steps 6, 7 and 9–19 of section F of the authors' working
 plan, in Indonesian. Step 7 is the TEST protocol, recorded before the TEST split was opened; step 9 is the pretraining
 contamination protocol, recorded before any ECG-FM embedding was computed; step 11 extends it to machine-statement
 tasks and a fine-tuned positive control, recorded before those were scored. Steps 10, 12, 13 and 14 were recorded
@@ -11,7 +11,9 @@ membership check, recorded before its code was written and before any loss was s
 continued-pretraining positive control; version 1.2.0 is released after step 17 and its code were committed and before
 any training, embedding or score of that step. Step 18 is the calibrated audit (paired manipulation check and a
 segment-agreement placebo on the clean models); version 1.3.0 is released after step 18 and its code were committed and
-before any of its statistics was computed. Each step was recorded
+before any of its statistics was computed. Step 19 re-tests the segment-agreement trace on fresh cohort recordings
+against a permuted-weight ECG-FM, adds dataset inference and a same-mask paired loss; version 1.4.0 is released after
+step 19 and its code were committed and before any of its readings or statistics was computed. Each step was recorded
 in a dated commit of the authors' private working repository; the bold **Hasil N** paragraphs inside a step were
 appended after the corresponding run. "Telaah internal N" is the authors' N-th internal pre-submission review. Sections
 on journal choice, manuscript outline and internal review are omitted. File names `Hasil_Glukosa_N.md` refer to
@@ -502,3 +504,72 @@ on journal choice, manuscript outline and internal review are omitted. File name
    terpisah (terbaca 44.116 dari 44.116; GPU sempat dibatasi daya saat laptop memakai baterai, tanpa akibat pada
    keluaran). Simpanan itu tidak dibuka dan `uji_audit.py` belum dijalankan. Penulis memilih pra-registrasi publik
    (rilis 1.3.0) sebelum statistik apa pun dihitung.
+   **Pra-registrasi publik:** atas konfirmasi penulis, rilis GitHub v1.3.0 (komit publik 8c9fc0e; protokol langkah 18,
+   kode `glukosa_audit/`, Hasil 19) diarsipkan Zenodo sebagai versi 1.3.0, DOI 10.5281/zenodo.24582292,
+   27 Nov 2026 08:39 UTC — sebelum statistik langkah 18 apa pun dihitung.
+   **Hasil 20 (27 Nov 2026, `Hasil_Glukosa_20.md`):** **K2 GAGAL:** Dₚ(ECG-FM+4) 0,0007 [−0,0039; 0,0049]; kehilangan
+   tidak mencatat suntikan, jadi suntikan dibaca sebagai dosis yang tidak terlihat pada kehilangan. **C2 GAGAL tipis:**
+   Cₚ 0,0002 [−0,0000; 0,0004]. **M2 LOLOS:** SMD kesesuaian segmen dilihat − tidak dilihat ECG-FM 0,129 [0,111; 0,147],
+   ECG-JEPA 0,006, ECGFounder 0,025; Δ 0,123 [0,102; 0,145] dan 0,103 [0,082; 0,125]. Menurut 18(d): judul dan abstrak
+   menyatakan daftar didukung oleh jejak khas ECG-FM; klaim "tidak dapat diaudit" dicabut; batas 0,002 bersyarat pada
+   jejak itu sebagai keanggotaan.
+   **Naskah ditulis ulang (6936eab), telaah internal 11 (27 Nov):** NOT READY, Reject in
+   current form; signifikansi 2 dari kelima peran (sebelas panel berturut ≤ 2); editor desk reject (satu model, batas
+   seukuran kontrol positif di plafon, tugas laboratorium tak terputuskan, kesesuaian segmen = prinsip EncoderMI [17]).
+   Kritis konsensus: judul menyatakan 0,002 tanpa syarat dan cakupan; "segment agreement … could" audit melampaui akibat
+   18(d), standar ganda karena C2 juga gagal; M2 hanya menunjukkan asosiasi daftar–keanggotaan, bukan kecocokan (efek
+   bisa 0,002/(π_s − π_u)). Mayor: M2 pada rekaman yang sisi ECG-FM-nya sudah dilihat (usul: ulang pada EKG kohort),
+   plasebo tak sepadan masukan (usul: arsitektur ECG-FM berbobot acak), K2 berderau topeng, "uji berbasis kehilangan"
+   terlalu umum, suntikan tanpa cek manipulasi lolos, sinyal LVH luar kohort, kanari dan inferensi dataset [19] tidak
+   dijalankan/dikutip, satu model terpapar, struktur glukosa-dulu, Gambar 1. Penulis 27 Nov memilih pra-registrasi
+   langkah 19.
+19. **Uji ulang jejak pada data segar, plasebo sepadan masukan, inferensi dataset, dan kehilangan berpasangan bertopeng
+   sama (dicatat 27 Nov 2026, sesudah telaah internal 11, sebelum kodenya ditulis dan sebelum statistik apa pun di bawah
+   dihitung).** Alasan: telaah internal 11 (methods X1–X4, X11; devil's advocate X2–X5, X9; domain X1, X4; editor X5). Yang sudah
+   dilihat: semua Hasil 1–20. Belum dihitung: kesesuaian segmen model apa pun pada EKG kohort Glukosa; ECG-FM dengan
+   bobot teracak; inferensi dataset; skor kehilangan dengan undian topeng yang sama antar-checkpoint. Embedding kohort
+   ECG-FM, ECG-JEPA, ECGFounder sudah ada (langkah 11) tetapi hanya pernah dipakai untuk probe. Skor dan embedding per
+   rekaman tetap tidak dibuka di sesi asisten; skrip mencetak agregat saja.
+   (a) **Unit segar:** EKG kohort Glukosa (tabel EKG tugas pernyataan langkah 11, yang ada di daftar split) dari pasien
+   yang **tidak** termasuk 44.116 pasien uji keanggotaan langkah 16; satu EKG per pasien diundi (benih 20261120). Uji:
+   semua pasien tidak dilihat (`valid` ∪ `test`) yang tersisa dan pasien dilihat sama banyak diundi; set penyetelan
+   kepadatan (b): pasien dilihat lain sama banyak, terpisah dari uji. Rekaman dan pasien ini belum pernah dinilai untuk
+   kesesuaian segmen atau keanggotaan oleh model apa pun. Hitungan dicetak; tidak ada ambang n minimum, efek terdeteksi
+   minimum (2,8 × simpangan baku bootstrap) dilaporkan deskriptif.
+   (b) **M3 — plasebo kesesuaian segmen, data segar, tiga rujukan:** kesesuaian segmen pada unit uji untuk ECG-FM
+   (seperti langkah 16: dua segmen 5 s, rerata token keluaran tanpa topeng, kosinus), ECG-JEPA dan ECGFounder (seperti
+   langkah 18b), dan **ECG-FM-acak**: arsitektur, pra-proses, dan pengukuran ECG-FM yang persis sama, dengan isi setiap
+   tensor bobot checkpoint pretrained diacak urutannya (permutasi per tensor, benih 20261120), sehingga sebaran nilai
+   bobot sama tetapi struktur hasil latih hilang. SMD dan Δ_c seperti 18b (penyebut tetap). **M3:** batas bawah 95 %
+   Δ_c > 0 untuk **ketiga** rujukan (ECG-JEPA, ECGFounder, ECG-FM-acak).
+   (c) **D1 — inferensi dataset ala [19]:** per model (ECG-FM, ECG-JEPA, ECGFounder), dari embedding kohort tersimpan
+   langkah 11: standarisasi dan PCA 64 komponen disetel pada set penyetelan, lalu GaussianMixture 10 komponen kovarians
+   penuh (benih 20261120) pada set penyetelan; skor = log-likelihood per rekaman uji. SMD dilihat − tidak dilihat
+   (penyebut tetap) dan Δ_DI = SMD_ECG-FM − SMD_c. **D1:** batas bawah 95 % Δ_DI > 0 untuk ECG-JEPA dan ECGFounder.
+   Kepadatan tidak disetel ulang per ulangan bootstrap.
+   (d) **K3 — kehilangan berpasangan dengan topeng sama:** 22.058 pasien tidak dilihat langkah 17 (paruh
+   disuntik/ditahan), rekaman yang sama. ECG-FM asli dan ECG-FM+4 dinilai ulang dengan skor kehilangan langkah 16b
+   (K = 4), benih torch dan numpy dipasang per rekaman (20261120 + nomor urut rekaman) sebelum tiap penilaian, sehingga
+   undian topeng dan negatif sama di kedua checkpoint. Δℓ dan Dₚ seperti 18a. **K3:** batas bawah 95 % Dₚ > 0.
+   Deskriptif: AUROC keanggotaan dari −Δℓ; korelasi Δℓ lama (18a) dan baru tidak dihitung (skor lama memakai topeng
+   lain). Cek determinisme sebelum jalan nyata: checkpoint asli dinilai dua kali pada data sintetis memberi skor identik.
+   (e) **Deskriptif tambahan tanpa vonis:** daya pisah per rekaman jejak (AUROC keanggotaan dari kosinus dan TPR pada
+   FPR 1 %) untuk ECG-FM dan tiap rujukan, pada data segar dan pada 44.116 rekaman langkah 16/18; SMD ECG-FM dengan
+   `valid` dan `test` terpisah; SMD umur, jenis kelamin, laju jantung, dan durasi QRS antarkelompok uji.
+   (f) **Statistik:** bootstrap 2.000 ulangan atas pasien, benih 20261120, selang kuantil 95 %; populasi uji segar
+   (b, c, e) dan populasi 22.058 pasien (d) masing-masing dengan ulangan bersama. M3, D1, K3 gerbang terpisah tanpa
+   koreksi multiplisitas.
+   (g) **Akibat untuk naskah, ditetapkan sekarang:** M3 lolos → dukungan daftar direplikasi pada rekaman dan pasien
+   segar dan melawan plasebo sepadan masukan; naskah menyatakan daftar didukung, dengan batas 0,002 dinyatakan beserta
+   cakupannya (rerata empat pernyataan berlabel) dan syaratnya (jejak = keanggotaan), dan kata "could audit" tidak
+   dipakai. M3 gagal (untuk satu rujukan saja pun) → M2 dilaporkan tidak direplikasi; judul dan abstrak tidak lagi
+   menyatakan daftar didukung; batas dinyatakan bersyarat pada daftar; sumbangan menjadi audit negatif: baik kehilangan
+   maupun kesesuaian segmen tidak memverifikasi daftar secara terulang. D1 lolos → uji kedua yang terpisah (inferensi
+   dataset) mendukung daftar; gagal → dilaporkan sebagai uji yang tidak mendeteksi keanggotaan, tanpa membatalkan M3. K3
+   lolos → kehilangan mencatat suntikan bila derau topeng dihapus; klaim "kehilangan tidak dapat mengaudit" disempitkan
+   menjadi "uji kehilangan satu rekaman tak berpasangan kurang daya". K3 gagal → pernyataan bahwa kehilangan bertopeng
+   ini tidak mencatat empat epoch suntikan dipertahankan, dibatasi pada kehilangan ini (bukan semua uji berbasis
+   kehilangan atau MIA terkalibrasi). Judul dalam semua kasus menyebut cakupan batas.
+   (h) **Proses:** kode di folder baru `glukosa_audit2/`, dikomit dan diuji asap pada data sintetis sebelum jalan nyata;
+   protokol dan kode dirilis publik (versi 1.4.0, atas konfirmasi penulis) sebelum statistik apa pun dihitung;
+   dijalankan sekali di jendela cmd terpisah dengan pengisi daya terpasang; hasil ke `Hasil_Glukosa_21.md`.

@@ -60,10 +60,24 @@ looked at; both are reproduced in `plan/Artikel_Glukosa_Rencana_petikan.md`:
   models that never saw MIMIC-IV-ECG, on the 44,116 recordings of step 16 (ECGFounder: cosine of the embeddings of the
   two 5 s halves; ECG-JEPA: cosine of the mean tokens of patches 1–25 and 26–50); rule M2, the lower 95 % bound of
   the seen − unseen standardised mean difference of ECG-FM minus that of each clean model is above 0, for both. The
-  consequences of each outcome for the manuscript are fixed in the plan (step 18d). **Version 1.3.0 is released before
-  any statistic of this step is computed**; the per-recording cosines of the clean models were computed after the code
-  was committed and have not been read. `glukosa_audit/` holds the scripts; the verdict script will be run once and its
-  output added as a note in a later version.
+  consequences of each outcome for the manuscript are fixed in the plan (step 18d). Version 1.3.0 (doi
+  10.5281/zenodo.24582292) was released before any statistic of this step was computed. Run once: K2 was not met, C2
+  was not met narrowly, M2 passed (`notes/Hasil_Glukosa_20.md`).
+- **Fresh-data placebo, dataset inference and same-mask loss** (plan step 19, 27 November 2026, recorded in a dated
+  private commit before its code was written and before any of its readings was computed): (a) fresh units — glucose
+  cohort ECGs in ECG-FM's split list from patients outside the 44,116 of step 16, one ECG per patient; all unseen
+  patients plus as many seen patients form the test set, and a separate, equal set of seen patients is kept for
+  density fitting; (b) rule M3, the lower 95 % bound of the seen − unseen segment-agreement standardised difference of
+  ECG-FM minus that of each reference is above 0 for ECG-JEPA, ECGFounder and ECG-FM-acak (ECG-FM's architecture and
+  pre-processing with the entries of every pretrained weight tensor permuted, seed 20261120); (c) rule D1, dataset
+  inference from the stored cohort embeddings (standardisation, PCA 64 and a 10-component Gaussian mixture fitted on
+  the density set, log-likelihood on the test set): the lower 95 % bound of ECG-FM's standardised difference minus
+  that of each clean model is above 0 for ECG-JEPA and ECGFounder; (d) rule K3, the original and continued ECG-FM
+  re-scored on the 22,058 unseen patients with the torch and numpy seeds set per recording, so that masks and
+  negatives match between checkpoints: the lower 95 % bound of the mean loss change of held-out minus injected
+  patients is above 0. The consequences of each outcome for the manuscript are fixed in the plan (step 19g).
+  **Version 1.4.0 is released before any reading or statistic of this step is computed.** `glukosa_audit2/` holds the
+  scripts; they will be run once and their output added as a note in a later version.
 
 Analyses recorded after the results they respond to (`Hasil_Glukosa_9.md`, `Hasil_Glukosa_10.md`, `Hasil_Glukosa_12.md`,
 `Hasil_Glukosa_14.md` to `Hasil_Glukosa_16.md`, plan steps 10, 12, 13 and 14, the per-model LVH gaps of step 16f in
@@ -122,8 +136,12 @@ on GPU is not bit-reproducible (VALIDATION AUROC moved by up to 0.015 between ru
   `penugasan_kontrol.py` and `pelatih_lanjut.py`), readings with the continued weights (`jalankan_bacaan.py`), and the
   verdicts (`uji_kontrol.py`, with `statistik_kontrol.py`; `Hasil_19`).
 - `glukosa_audit/` — the calibrated audit: segment agreement of the clean models (`jalankan_kesesuaian.py`, with
-  `kesesuaian_bersih.py`), then the verdicts (`uji_audit.py`, with `statistik_audit.py`). Not yet run in 1.3.0.
-- `notes/` — the working notes `Hasil_Glukosa_0.md` to `Hasil_Glukosa_19.md`, in which every number of the manuscript
+  `kesesuaian_bersih.py`), then the verdicts (`uji_audit.py`, with `statistik_audit.py`; `Hasil_20`).
+- `glukosa_audit2/` — step 19: fresh units and the ECG-FM readings, original and permuted, plus the same-mask losses
+  (`jalankan_fm_segar.py`, with `unit_segar.py` and `penilai_fm.py`), segment agreement of the clean models on the
+  fresh units (`jalankan_bersih_segar.py`), then the verdicts (`uji_audit2.py`, with `statistik_audit2.py`). Not yet
+  run in 1.4.0.
+- `notes/` — the working notes `Hasil_Glukosa_0.md` to `Hasil_Glukosa_20.md`, in which every number of the manuscript
   was recorded with the copied script output.
 - `plan/` — the excerpt of the analysis plan described above.
 

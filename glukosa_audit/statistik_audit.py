@@ -93,9 +93,9 @@ def simpangan_gabungan(nilai, kelompok, pembanding):
     return float(np.sqrt((np.var(nilai[kelompok]) + np.var(nilai[pembanding])) / 2))
 
 
-def smd_kovariat(pop):
+def smd_kovariat(pop, kovariat=KOVARIAT):
     hasil = {}
-    for kolom in KOVARIAT:
+    for kolom in kovariat:
         nilai = pop.nilai[kolom]
         ada = np.isfinite(nilai)
         a, b = nilai[ada & pop.kelompok], nilai[ada & ~pop.kelompok]
