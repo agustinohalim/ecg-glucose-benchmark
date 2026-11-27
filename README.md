@@ -76,12 +76,29 @@ looked at; both are reproduced in `plan/Artikel_Glukosa_Rencana_petikan.md`:
   re-scored on the 22,058 unseen patients with the torch and numpy seeds set per recording, so that masks and
   negatives match between checkpoints: the lower 95 % bound of the mean loss change of held-out minus injected
   patients is above 0. The consequences of each outcome for the manuscript are fixed in the plan (step 19g).
-  **Version 1.4.0 is released before any reading or statistic of this step is computed.** `glukosa_audit2/` holds the
-  scripts; they will be run once and their output added as a note in a later version.
+  Version 1.4.0 (doi 10.5281/zenodo.24583858) was released before any reading or statistic of this step was computed.
+  Run once: M3 and D1 were not met, K3 passed (`notes/Hasil_Glukosa_21.md`).
+- **Re-reading with equal eligibility** (plan step 20, 27 November 2026, recorded with its code in a dated private
+  commit after the step 19 results and before its own run; post hoc): step 19 took every unseen patient but only a
+  random sample of seen patients, so the two fresh groups differed in whether a patient had recordings outside the
+  cohort. The same rule (no recording outside the cohort) is applied to both groups, a balance gate requires |SMD| <
+  0.1 for age, sex, heart rate and QRS duration, and M3 and D1 are re-read as M3* and D1*. Run once: the groups were
+  balanced, M3* passed, D1* was not met (`notes/Hasil_Glukosa_22.md`).
+- **Off-ceiling tasks** (plan step 21, 28 November 2026, recorded with its code before any model was scored on these
+  tasks): six ECG-FM fine-tuning labels not scored before (infarction, premature ventricular contraction, atrial
+  flutter, electronic pacemaker, poor data quality, sinus rhythm), whose statement patterns match the ECG-FM label
+  prevalence within 1.5 percentage points in every split part, on the 416,503 replication recordings with the stored
+  embeddings of step 15. The primary family is the tasks whose out-of-fold ECG-JEPA AUROC over all units is at most
+  0.95. Gate G21: the lower 95 % bound of the fine-tuned checkpoint's mean DiD over the family is above 0. Test H21:
+  the pretrained ECG-FM's mean DiD over the family, read with the margin 0.01 of the second protocol. Step 21 is the
+  last analysis of the membership effect and of the split list (stopping rule in the plan, step 21g).
+  **Version 1.5.0 is released before any model is scored on these tasks.** `glukosa_lepas_plafon/` holds the scripts;
+  they will be run once and their output added as a note in a later version.
 
 Analyses recorded after the results they respond to (`Hasil_Glukosa_9.md`, `Hasil_Glukosa_10.md`, `Hasil_Glukosa_12.md`,
 `Hasil_Glukosa_14.md` to `Hasil_Glukosa_16.md`, plan steps 10, 12, 13 and 14, the per-model LVH gaps of step 16f in
-`Hasil_Glukosa_18.md`, and the ICU analysis in `Hasil_Glukosa_2.md`) are marked as post hoc and descriptive in their
+`Hasil_Glukosa_18.md`, the re-reading of plan step 20 in `Hasil_Glukosa_22.md`, and the ICU analysis in
+`Hasil_Glukosa_2.md`) are marked as post hoc and descriptive in their
 notes.
 
 ## Requirements
@@ -139,9 +156,11 @@ on GPU is not bit-reproducible (VALIDATION AUROC moved by up to 0.015 between ru
   `kesesuaian_bersih.py`), then the verdicts (`uji_audit.py`, with `statistik_audit.py`; `Hasil_20`).
 - `glukosa_audit2/` — step 19: fresh units and the ECG-FM readings, original and permuted, plus the same-mask losses
   (`jalankan_fm_segar.py`, with `unit_segar.py` and `penilai_fm.py`), segment agreement of the clean models on the
-  fresh units (`jalankan_bersih_segar.py`), then the verdicts (`uji_audit2.py`, with `statistik_audit2.py`). Not yet
-  run in 1.4.0.
-- `notes/` — the working notes `Hasil_Glukosa_0.md` to `Hasil_Glukosa_20.md`, in which every number of the manuscript
+  fresh units (`jalankan_bersih_segar.py`), then the verdicts (`uji_audit2.py`, with `statistik_audit2.py`). Step 20
+  re-reads them with equal eligibility (`uji_kelayakan_sama.py`, with `kelayakan_sama.py`; `Hasil_22`).
+- `glukosa_lepas_plafon/` — step 21: pattern labels and their fidelity check (`siapkan_lepas_plafon.py`, with
+  `tugas_lepas_plafon.py`), then the verdicts (`jalankan_lepas_plafon.py`). Not yet run in 1.5.0.
+- `notes/` — the working notes `Hasil_Glukosa_0.md` to `Hasil_Glukosa_22.md`, in which every number of the manuscript
   was recorded with the copied script output.
 - `plan/` — the excerpt of the analysis plan described above.
 

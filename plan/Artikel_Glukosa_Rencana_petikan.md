@@ -1,6 +1,6 @@
 # Analysis plan (excerpt)
 
-Section C2 (dataset facts that shaped the design) and work steps 6, 7 and 9–19 of section F of the authors' working
+Section C2 (dataset facts that shaped the design) and work steps 6, 7 and 9–21 of section F of the authors' working
 plan, in Indonesian. Step 7 is the TEST protocol, recorded before the TEST split was opened; step 9 is the pretraining
 contamination protocol, recorded before any ECG-FM embedding was computed; step 11 extends it to machine-statement
 tasks and a fine-tuned positive control, recorded before those were scored. Steps 10, 12, 13 and 14 were recorded
@@ -13,7 +13,11 @@ any training, embedding or score of that step. Step 18 is the calibrated audit (
 segment-agreement placebo on the clean models); version 1.3.0 is released after step 18 and its code were committed and
 before any of its statistics was computed. Step 19 re-tests the segment-agreement trace on fresh cohort recordings
 against a permuted-weight ECG-FM, adds dataset inference and a same-mask paired loss; version 1.4.0 is released after
-step 19 and its code were committed and before any of its readings or statistics was computed. Each step was recorded
+step 19 and its code were committed and before any of its readings or statistics was computed. Step 20 re-reads
+step 19 with the same eligibility rule for both groups; it was recorded with its code after the step 19 results and
+before its own run, and is marked PASCA-HASIL. Step 21 tests ECG-FM fine-tuning labels that are off the ceiling and
+is declared the last analysis of the membership effect; version 1.5.0 is released after step 21 and its code were
+committed and before any model was scored on its tasks. Each step was recorded
 in a dated commit of the authors' private working repository; the bold **Hasil N** paragraphs inside a step were
 appended after the corresponding run. "Telaah internal N" is the authors' N-th internal pre-submission review. Sections
 on journal choice, manuscript outline and internal review are omitted. File names `Hasil_Glukosa_N.md` refer to
@@ -573,3 +577,101 @@ on journal choice, manuscript outline and internal review are omitted. File name
    (h) **Proses:** kode di folder baru `glukosa_audit2/`, dikomit dan diuji asap pada data sintetis sebelum jalan nyata;
    protokol dan kode dirilis publik (versi 1.4.0, atas konfirmasi penulis) sebelum statistik apa pun dihitung;
    dijalankan sekali di jendela cmd terpisah dengan pengisi daya terpasang; hasil ke `Hasil_Glukosa_21.md`.
+   **Proses (27 Nov):** kode dikomit (bd72e55) dan diuji asap pada data sintetis (ZIP WFDB acak, kohort dan embedding
+   acak; ECG-FM+4 sintetis = bobot asli sehingga Dₚ K3 tepat 0; cek determinisme identik; kontrol positif inferensi
+   dataset memberi log-likelihood dilihat lebih tinggi); satu jalan asap pertama berhenti dengan access violation dan
+   tidak berulang pada tiga jalan berikutnya (skrip melewati simpanan yang sudah ada, jadi jalan nyata dapat diulang).
+   Rilis publik versi 1.4.0 atas "go" penulis, doi 10.5281/zenodo.24583858, sebelum bacaan atau statistik apa pun
+   langkah ini dihitung.
+   **Hasil 21 (27 Nov 2026, `Hasil_Glukosa_21.md`):** dijalankan sekali 16:48–19:03 WIB, tanpa ulang. **M3 GAGAL:**
+   pada 20.214 EKG segar, SMD kesesuaian segmen ECG-FM 0,088 dan ECG-JEPA 0,089; Δ_c terhadap ECG-JEPA −0,002 [−0,033;
+   0,031], terhadap ECGFounder 0,131 [0,099; 0,162], terhadap ECG-FM-acak 0,100 [0,065; 0,136]. **D1 GAGAL:** Δ_DI 0,003
+   [−0,030; 0,039] dan 0,004 [−0,031; 0,039]; ketiga model memberi SMD log-likelihood ±−0,14 (dilihat lebih rendah).
+   **K3 LOLOS:** Dₚ 0,0017 [0,0006; 0,0028], AUROC 0,51. Deskriptif: SMD umur segar 0,212, QRS 0,111. Akibat menurut
+   19(g): M2 tidak direplikasi; judul dan abstrak tidak menyatakan daftar didukung; batas 0,002 bersyarat pada daftar;
+   sumbangan = audit negatif; klaim kehilangan disempitkan menjadi "uji satu rekaman tak berpasangan kurang daya".
+   Naskah ditulis ulang per 19(g) pada 27 Nov malam (judul baru disetujui penulis; 2.13 dan 3.10 + Tabel 8 baru);
+   belum ditelaah panel. **Panel 12 (27 Nov malam): NOT READY, Reject,
+   signifikansi 2; kritis konsensus: unit segar 19a tak sebanding menurut konstruksi (lihat langkah 20).**
+
+20. **Uji ulang 19b–c dengan kelayakan sama di kedua kelompok (dicatat 27 Nov 2026 malam, sesudah Hasil 21 dan panel
+   12, sebelum kodenya ditulis; PASCA-HASIL — aturan ditetapkan sebelum statistik langkah ini dihitung, tetapi sesudah
+   hasil M3 dan D1 diketahui, jadi tidak konfirmatori).** Alasan: langkah 16a mengambil **semua** pasien tidak dilihat
+   di tabel unit replikasi (pasien yang punya rekaman di daftar split di luar kohort), sedangkan pasien dilihat hanya
+   diundi sebagian. Langkah 19a mengecualikan pasien langkah 16, sehingga tidak dilihat segar praktis hanya pasien
+   tanpa rekaman luar kohort, sedangkan dilihat segar campuran. Asimetri ini ada di kode (`unit_segar.py`) dan tidak
+   terlihat saat langkah 19 dicatat; telaah internal 12 (metode, domain, devil's advocate) menemukannya. Kondisi itu cocok dengan
+   SMD umur 0,212 dan SMD log-likelihood −0,14 yang sama di ketiga model. Tidak ada rekaman atau model baru; hanya
+   simpanan langkah 19 dan embedding kohort langkah 11 yang dibaca ulang, skrip mencetak agregat saja.
+   (a) **Kelayakan:** pasien layak = `subject_id` tidak ada di `unit_replikasi.csv` (tidak punya rekaman di daftar split
+   di luar kohort). Diterapkan sama pada dilihat dan tidak dilihat di unit uji 19a, dan pada set penyetelan. Hitungan
+   layak/tak layak per kelompok dicetak.
+   (b) **Cek keseimbangan (gerbang tafsir):** SMD umur, jenis kelamin, laju jantung, dan durasi QRS dilihat − tidak
+   dilihat pada unit uji layak. Sebanding bila |SMD| < 0,1 untuk keempatnya. Deskriptif: SMD kovariat yang sama antara
+   pasien dilihat tak layak dan dilihat layak (menguji mekanisme seleksi secara langsung).
+   (c) **M3\*:** statistik 19b persis sama (SMD penyebut tetap, Δ_c terhadap ECG-JEPA, ECGFounder, ECG-FM-acak) pada
+   unit uji layak. Lolos bila batas bawah 95 % Δ_c > 0 untuk ketiga rujukan.
+   (d) **D1\*:** statistik 19c persis sama, kepadatan disetel ulang sekali pada set penyetelan layak. Lolos bila batas
+   bawah 95 % Δ_DI > 0 untuk ECG-JEPA dan ECGFounder.
+   (e) **Statistik:** bootstrap 2.000 ulangan atas pasien, benih 20261120, selang kuantil 95 %; efek terdeteksi minimum
+   2,8 × simpangan baku bootstrap; daya pisah per rekaman seperti 19e. K3 tidak diulang (tidak terkena seleksi ini).
+   (f) **Akibat untuk naskah, ditetapkan sekarang:** dalam semua kasus naskah menyebut mekanisme seleksi 19a dan bahwa
+   M3/D1 langkah 19 membandingkan kelompok tak sebanding, sehingga kegagalan keduanya tidak lagi dibaca sebagai bukti
+   bahwa jejak M2 bukan keanggotaan. Tidak sebanding (|SMD| ≥ 0,1 untuk salah satu kovariat) → uji ulang segar
+   dinyatakan tak dapat ditafsirkan; daftar tidak terverifikasi dan tidak terbantah; batas 0,002 tetap bersyarat pada
+   daftar. Sebanding dan M3\* lolos → jejak kesesuaian segmen khas ECG-FM muncul lagi pada pasien segar yang sebanding
+   (pasca-hasil, bukan konfirmatori); naskah boleh menyatakan bukti mendukung daftar dengan label itu, judul baru perlu
+   persetujuan penulis. Sebanding dan M3\* gagal → pembacaan negatif 19(g) dipertahankan, kini pada kelompok
+   sebanding. D1\* dilaporkan di samping M3\* tanpa membatalkannya.
+   (g) **Proses:** kode `glukosa_audit2/uji_kelayakan_sama.py`, dikomit bersama protokol ini sebelum dijalankan; satu
+   kali jalan; hasil ke `Hasil_Glukosa_22.md`. Rilis publik berikutnya hanya atas perintah penulis.
+   **Hasil 22 (27 Nov 2026 malam, `Hasil_Glukosa_22.md`, kode 4938570, satu jalan):** 5.400 dari 10.107 pasien
+   dilihat segar tak layak, tidak dilihat 0; dilihat tak layak lebih tua (SMD umur 0,397). Unit layak 4.707 dilihat
+   lawan 10.107 tidak dilihat, **sebanding** (|SMD| ≤ 0,023). **M3\* LOLOS:** SMD ECG-FM 0,081, ECG-JEPA 0,011,
+   ECGFounder 0,010, ECG-FM-acak −0,003; Δ_c 0,070 [0,030; 0,108], 0,071 [0,030; 0,111], 0,084 [0,040; 0,126].
+   **D1\* GAGAL** (pergeseran −0,14 Hasil 21 hilang: efek seleksi). Akibat menurut 20(f): jejak khas ECG-FM muncul lagi
+   pada pasien segar sebanding (pasca-hasil); naskah menyebut mekanisme seleksi 19a; judul baru menunggu persetujuan
+   penulis.
+   **Panel 13 (28 Nov 2026), atas naskah ditulis ulang per 20(f) (4f6583e):** NOT
+   READY, Reject in current form, signifikansi 2 (semua peran), editor desk reject. Kritis: batas 0,002 perlu
+   dinyatakan sebagai fungsi kemurnian daftar. Penyebab penolakan tetap sama sejak telaah internal 11: tugas di plafon dan satu
+   model; perbaikan teks tidak menggeser signifikansi (pola 27 Sep – 16 Okt). Keputusan arah ada pada penulis.
+   **28 Nov: penulis memilih arah 1 (tugas lepas plafon) → langkah 21.**
+
+21. **Tugas lepas plafon (dicatat 28 Nov 2026, sebelum model mana pun dinilai pada tugas ini).** Menjawab keberatan
+   editor telaah internal 11–13: batas 0,002 hanya berlaku di empat tugas berplafon, tempat fine-tuning label pun hampir tak
+   terukur. Uji konfirmasi LVH pada pasien baru tidak mungkin: seluruh pasien daftar split sudah dipakai di kohort atau
+   replikasi, dan subset pasien-terpisah sudah dibaca (Tabel 3 baris 7).
+   (a) **Tugas:** label ECG-FM fine-tuned (label_def.csv) yang belum dinilai, pola di
+   `glukosa_lepas_plafon/tugas_lepas_plafon.py`. Kesetiaan pola diperiksa lebih dulu dengan hitungan agregat tanpa
+   model (`siapkan_lepas_plafon.py`, 28 Nov): selisih terbesar prevalensi pola lawan label per bagian split infark
+   0,25 poin persen, PVC 0,29, flutter atrium 0,14, pacu elektronik 0,28, mutu data buruk 0,38, irama sinus 0,53;
+   ditolak takikardia 14,61, bradikardia 2,44, jalur aksesori 10,78, SVT aberan 2,84. Ambang setia 1,5 poin persen
+   (selisih terbesar yang sudah diterima di 2.2, AV blok derajat 1, 1,2, dibulatkan ke atas) ditetapkan sesudah hitungan
+   itu terlihat; dicatat terus terang. Tidak diikutkan: takikardia ventrikel (0,09 %), AV blok dan blok bifasikular
+   (memuat tugas lama). Positif tugas baru yang juga positif tugas lama: 24–54 % (pacu 23,7, flutter 30,9, sinus
+   25,1, mutu 36,5, infark 44,8, PVC 54,3).
+   (b) **Data dan model:** unit replikasi langkah 15 (416.503 rekaman); embedding tersimpan ECG-JEPA, ECG-FM, ECG-FM
+   fine-tuned; probe L2, C dipilih seperti 2.3, lima lipatan pasien benih 20261120; bootstrap 2.000 bergugus pasien
+   benih 20261120, semua tugas pada ulangan yang sama. ECGFounder tidak ada di replikasi.
+   (c) **Keluarga utama (lepas plafon):** tugas setia dengan AUROC ECG-JEPA di luar lipatan atas semua unit ≤ 0,95,
+   dihitung dalam jalan yang sama sebelum DiD dibaca. Keluarga kosong → langkah tidak informatif, H21 tidak diuji.
+   (d) **G21 (gerbang kontrol positif):** batas bawah rerata DiD ECG-FM fine-tuned atas keluarga > 0. Gagal → H21
+   tidak ditafsirkan.
+   (e) **H21:** rerata DiD ECG-FM pretrained atas keluarga dengan aturan 2.7 (ε 0,01): *didukung* bila batas bawah > 0,
+   *di bawah margin* bila batas atas < 0,01, *tak terputuskan* selain itu. Batas atasnya dilaporkan sebagai batas lepas
+   plafon, dibandingkan dengan DiD kontrol positif.
+   (f) **Sekunder deskriptif, tanpa vonis:** per tugas, skala logit, tidak dilihat = `test` saja, pasien di luar
+   kohort, dan kemurnian: selisih laju keanggotaan sejati antarkelompok di bawah mana batas atas melewati 0,01 dan
+   0,005 (DiD teramati = efek × selisih itu).
+   (g) **Aturan berhenti:** langkah 21 adalah analisis terakhir atas efek keanggotaan dan atas daftar split di naskah
+   ini. Apa pun hasilnya, tidak ada tugas, aturan kelayakan, atau pembacaan ulang baru; naskah melaporkan hasil ini dan
+   menyebut aturan berhenti ini.
+   (h) **Akibat untuk naskah:** G21 lolos dan H21 di bawah margin → klaim "tidak ada inflasi terukur" meluas ke tugas
+   lepas plafon dengan kontrol positif yang bekerja, dan batas lepas plafon masuk abstrak. G21 lolos dan H21 didukung →
+   inflasi terdeteksi pada tugas lepas plafon; judul dijawab "ya" untuk tugas itu, batas 0,002 dibatasi ke tugas
+   berplafon. G21 lolos dan tak terputuskan → dilaporkan apa adanya tanpa klaim baru. G21 gagal → tidak informatif.
+   Batas dinyatakan sebagai fungsi kemurnian daftar di semua kasus (temuan kritis telaah internal 13).
+   (i) **Proses:** protokol ini dan kodenya dikomit bersama sebelum jalan. Rilis publik sebelum jalan (konfirmatori)
+   hanya atas perintah penulis; tanpa rilis, statusnya *pre-specified*. Satu kali jalan, hasil ke
+   `Hasil_Glukosa_23.md`.

@@ -32,7 +32,7 @@ def muat_segar(unit, berkas_fm, berkas_bersih, folder_emb):
     nilai.update({f"di {m}": kemungkinan_log(np.load(Path(folder_emb) / f"emb_{m}.npy", mmap_mode="r"), setel,
                                               uji.baris_gelombang.to_numpy()) for m in MODEL_DI})
     sah = np.isfinite(np.column_stack(list(nilai.values()))).all(axis=1)
-    nilai.update({k: uji[k].to_numpy(float) for k in KOVARIAT_SEGAR})
+    nilai.update({k: uji[k].to_numpy(float) for k in (*KOVARIAT_SEGAR, "baris_gelombang")})
     return Populasi({k: v[sah] for k, v in nilai.items()}, uji.dilihat.to_numpy(bool)[sah],
                     uji.split_ecgfm.to_numpy()[sah], int((~sah).sum()))
 
