@@ -675,3 +675,31 @@ on journal choice, manuscript outline and internal review are omitted. File name
    (i) **Proses:** protokol ini dan kodenya dikomit bersama sebelum jalan. Rilis publik sebelum jalan (konfirmatori)
    hanya atas perintah penulis; tanpa rilis, statusnya *pre-specified*. Satu kali jalan, hasil ke
    `Hasil_Glukosa_23.md`.
+   Rilis publik versi 1.5.0 atas pilihan penulis (28 Nov), doi 10.5281/zenodo.24599381, sebelum model mana pun dinilai
+   pada tugas langkah ini; status konfirmatori.
+   **Hasil 23 (28 Nov 2026, `Hasil_Glukosa_23.md`, kode 5fd2dcc, satu jalan):** keluarga lepas plafon infark (AUROC
+   ECG-JEPA 0,856) dan mutu data buruk (0,819). **G21 LOLOS:** DiD fine-tuned 0,0257 [0,0194; 0,0319], sekitar sepuluh
+   kali efek label di tugas berplafon. **H21 di bawah margin:** DiD pretrained −0,0001 [−0,0077; 0,0078]. Batas atas
+   melewati 0,01 bila selisih laju keanggotaan sejati < 0,776. Sekunder: `test` saja 0,0020 [−0,0087; 0,0127], pasien di
+   luar kohort 0,0206 [−0,0040; 0,0453] (keduanya tak terputuskan). Akibat 21(h): klaim nol meluas ke tugas lepas
+   plafon dengan kontrol positif yang bekerja; naskah ditulis ulang; aturan berhenti berlaku.
+   **Naskah ditulis ulang per 21(h) (28 Nov):** abstrak memuat batas 0,0012 (plafon) dan 0,008 (lepas plafon) lawan
+   efek label 0,026, syarat daftar tepat dan ambang kemurnian 0,78; Hasil disusun menurut klaim (3.1–3.8 DiD, 3.9–3.12
+   daftar, 3.13 injeksi); 3.6 dan Tabel 6 baru; 3.7 subset pasien-terpisah dengan standar sama seperti M3\*; 2.6 memuat
+   tally enam aturan daftar dan aturan berhenti; pustaka kanari, LiRA, blind baseline ditambahkan di 4.5 ([77]–[79]).
+   Temuan telaah internal 13 yang menuntut analisis keanggotaan baru tidak dikerjakan karena 21(g); dicatat di 4.6.
+   **telaah internal 14 (28 Nov): kritis: kemurnian daftar tak berbatas bawah.** Penulis memilih opsi 1 (revisi teks) +
+   opsi 2 (surel ke pengembang ECG-FM). Opsi 1: kesimpulan
+   bersyarat "no inflation above 0.0012 / 0.008 detected, assuming an exact list"; kontras per tugas (infark tak
+   terpisah); 3.9–3.13 dipindah ke Suplemen Bagian S4, diganti 3.9/3.10 + Tabel 7 ringkasan; Gambar 1 baru dua panel
+   (Gambar 1 lama = S2); M3\* setara subset; ε 0,02/0,005; pustaka [80]–[82]. Uji berpasangan dua paparan dan uji
+   heterogenitas subset tidak ditambah (21(g)). Opsi 2: draf `Surat_ECGFM_Manifes.md`, dikirim penulis; manifes yang
+   datang hanya dibandingkan dengan daftar (hitungan cocok), bukan analisis keanggotaan baru, kecuali penulis
+   memutuskan lain di sini.
+   **telaah internal 15 (28 Nov): kritis: batas diperluas ke tolok ukur lain [3] padahal subset luar kohort 0,045.** Revisi
+   putaran 2 (a203957): perluasan dibuang, 0,045 dinyatakan (Tabel S21), batas per tugas, Metode 2.10–2.14 ke S5,
+   judul pilihan penulis. Penerima surel diisi dari README repo ECG-FM (28 Nov); penulis yang mengirim.
+   **telaah internal 16 (28 Nov): NOT READY, Major revision, editor send_to_review, median signifikansi 2 (tiga panel
+   berturut), tanpa kritis.** Konsensus menuntut uji berpasangan infark, heterogenitas subset, keseimbangan M2/subset
+   dan selang valid − test (methods X1/X4, devil's advocate X6/X7): semuanya dilarang 21(g); membukanya keputusan
+   penulis yang ditulis di sini, berlabel pasca-hasil deskriptif dari keluaran tersimpan.

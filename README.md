@@ -92,8 +92,10 @@ looked at; both are reproduced in `plan/Artikel_Glukosa_Rencana_petikan.md`:
   0.95. Gate G21: the lower 95 % bound of the fine-tuned checkpoint's mean DiD over the family is above 0. Test H21:
   the pretrained ECG-FM's mean DiD over the family, read with the margin 0.01 of the second protocol. Step 21 is the
   last analysis of the membership effect and of the split list (stopping rule in the plan, step 21g).
-  **Version 1.5.0 is released before any model is scored on these tasks.** `glukosa_lepas_plafon/` holds the scripts;
-  they will be run once and their output added as a note in a later version.
+  Version 1.5.0 (doi 10.5281/zenodo.24599381) was released before any model was scored on these tasks. Run once:
+  infarction and poor data quality formed the family, G21 passed and H21 read below the margin
+  (`notes/Hasil_Glukosa_23.md`). As fixed in step 21, no further analysis of the membership effect or of the split
+  list follows; the readings of patients with no ECG in the glucose cohort in that note are descriptive.
 
 Analyses recorded after the results they respond to (`Hasil_Glukosa_9.md`, `Hasil_Glukosa_10.md`, `Hasil_Glukosa_12.md`,
 `Hasil_Glukosa_14.md` to `Hasil_Glukosa_16.md`, plan steps 10, 12, 13 and 14, the per-model LVH gaps of step 16f in
@@ -147,8 +149,8 @@ on GPU is not bit-reproducible (VALIDATION AUROC moved by up to 0.015 between ru
   three embeddings are built with `glukosa_m3/bangun_embedding.py --singgahan <replication folder>`, the analysis
   (`jalankan_replikasi.py`, with `prediksi_replikasi.py` and `statistik_replikasi.py`; `Hasil_17`); the membership
   check (`uji_keanggotaan.py`, with `skor_keanggotaan.py`, `baca_keanggotaan.py`, `hitung_keanggotaan.py` and
-  `statistik_keanggotaan.py`) and the per-model LVH gaps (`celah_lvh.py`; both `Hasil_18`); the figure of the
-  manuscript (`gambar_replikasi.py`).
+  `statistik_keanggotaan.py`) and the per-model LVH gaps (`celah_lvh.py`; both `Hasil_18`); a supplementary figure
+  of the manuscript (`gambar_replikasi.py`).
 - `glukosa_kontrol/` — the continued-pretraining positive control: training (`jalankan_latih.py`, with
   `penugasan_kontrol.py` and `pelatih_lanjut.py`), readings with the continued weights (`jalankan_bacaan.py`), and the
   verdicts (`uji_kontrol.py`, with `statistik_kontrol.py`; `Hasil_19`).
@@ -159,8 +161,9 @@ on GPU is not bit-reproducible (VALIDATION AUROC moved by up to 0.015 between ru
   fresh units (`jalankan_bersih_segar.py`), then the verdicts (`uji_audit2.py`, with `statistik_audit2.py`). Step 20
   re-reads them with equal eligibility (`uji_kelayakan_sama.py`, with `kelayakan_sama.py`; `Hasil_22`).
 - `glukosa_lepas_plafon/` — step 21: pattern labels and their fidelity check (`siapkan_lepas_plafon.py`, with
-  `tugas_lepas_plafon.py`), then the verdicts (`jalankan_lepas_plafon.py`). Not yet run in 1.5.0.
-- `notes/` — the working notes `Hasil_Glukosa_0.md` to `Hasil_Glukosa_22.md`, in which every number of the manuscript
+  `tugas_lepas_plafon.py`), then the verdicts (`jalankan_lepas_plafon.py`; `Hasil_23`); the figure of the manuscript,
+  near and off the ceiling on one scale (`gambar_lepas_plafon.py`, which reads `Hasil_17` and `Hasil_23` only).
+- `notes/` — the working notes `Hasil_Glukosa_0.md` to `Hasil_Glukosa_23.md`, in which every number of the manuscript
   was recorded with the copied script output.
 - `plan/` — the excerpt of the analysis plan described above.
 
